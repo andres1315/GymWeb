@@ -5,7 +5,7 @@ import { PrivateGuard } from "./PrivateGuard"
 import { RoutesNotFound } from "./RoutesNotFound"
 import { Suspense,lazy } from "react"
 
-const Login = lazy(()=> import('@/features/Login/pages/Login'))
+const Login = lazy(()=> import('@/features/Login/page/Login'))
 const PrivateRouter = lazy(()=> import('./PrivateRouter'))
 
 

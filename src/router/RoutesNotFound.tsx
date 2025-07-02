@@ -1,7 +1,8 @@
 
+import type { ReactNode } from "react";
 import { Route, Routes } from "react-router";
 interface Props {
-  children: React.ReactNode
+  children: ReactNode
 }
 
 export function RoutesNotFound({children}:Props){
