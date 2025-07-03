@@ -1,16 +1,56 @@
-
-import { Button } from "@/components/ui/button";
 import { AnimatedGradientButton, HoverBorderGradient } from "@/components/ui/customTheme";
+import { authService } from "@/services/auth/AuthService";
+import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { EyeOff, Lock, Mail } from "lucide-react";
 import { useNavigate } from "react-router";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useUserStore } from "@/store/useUserStore";
+import type { LoginCredentials } from "@/common/auth.type";
 
 export function AuthForm() {
   const navigate = useNavigate()
+  const { setUser } = useUserStore();
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [formData, setFormData] = useState<LoginCredentials>({
+    email: '',
+    password: ''
+  });
+
+  useEffect(() => {
+    validateAutentication();
+  }, [])
+
+  const validateAutentication = async () => {
+    const response = await authService.isAuthenticated();
+    if (response) {
+      setUser({ ...response, isLogin: true })
+      navigate('/home/dashboard', { replace: true })
+    }
+  }
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const response = await authService.login(formData)
+    if (response.success) {
+      setUser(response.data ? { ...response.data, isLogin: true } : {})
+      navigate('/home/dashboard', { replace: true })
+    }
+  };
+
   return (
     <section className="space-y-6">
-      <form onSubmit={() => {}} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Campo de email */}
         <div className="space-y-2">
           <Label htmlFor="email" className="flex items-center gap-2">
@@ -20,9 +60,10 @@ export function AuthForm() {
           <Input
             id="email"
             type="email"
+            name="email"
             placeholder="admin@fitwinner.com"
-            value={''}
-            onChange={(e) => console.log(e)}
+            value={formData.email}
+            onChange={handleChange}
             className="transition-colors focus-within:border-primary/50"
             required
           />
@@ -37,10 +78,11 @@ export function AuthForm() {
           <div className="relative">
             <Input
               id="password"
-              type={'password'}
+              name="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
-              value={''}
-              onChange={(e) => console.log(e)}
+              value={formData.password}
+              onChange={handleChange}
               className="pr-10 transition-colors focus-within:border-primary/50"
               required
             />
@@ -49,18 +91,17 @@ export function AuthForm() {
               variant="ghost"
               size="sm"
               className="absolute top-0 right-0 h-full px-3 py-2 hover:bg-transparent"
-              onClick={() => console.log()}
+              onClick={() => setShowPassword(!showPassword)}
             >
-              <EyeOff className="h-4 w-4 text-muted-foreground" />
-              {/* {false ?  : <Eye className="h-4 w-4 text-muted-foreground" />} */}
+              {showPassword ? <EyeOff className="h-4 w-4 text-muted-foreground" /> : <Eye className="h-4 w-4 text-muted-foreground" />}
             </Button>
           </div>
         </div>
 
         <div className="space-y-3">
           <HoverBorderGradient className="w-full rounded-md">
-            <AnimatedGradientButton type="button" className="w-full" onClick={() => navigate('/home/dashboard',{replace:true})}>
-              <div className="flex items-center gap-2">
+            <AnimatedGradientButton type="submit" className="w-full">
+              <div className="flex items-center justify-center gap-2">
                 <Lock className="h-4 w-4" />
                 Iniciar Sesión
               </div>
