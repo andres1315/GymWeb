@@ -1,11 +1,11 @@
 import { AnimatedGradientButton, HoverBorderGradient } from "@/components/ui/customTheme";
 import { authService } from "@/services/auth/AuthService";
 import { Button } from "@/components/ui/button";
-import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Loader, Lock, Mail } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useNavigate } from "react-router";
 import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import { useUserStore } from "@/store/useUserStore";
 import type { LoginCredentials } from "@/common/auth.type";
 
@@ -13,6 +13,7 @@ export function AuthForm() {
   const navigate = useNavigate()
   const { setUser } = useUserStore();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [formData, setFormData] = useState<LoginCredentials>({
     email: '',
@@ -41,11 +42,14 @@ export function AuthForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     const response = await authService.login(formData)
     if (response.success) {
       setUser(response.data ? { ...response.data, isLogin: true } : {})
       navigate('/home/dashboard', { replace: true })
     }
+    setIsLoading(false);
   };
 
   return (
@@ -100,12 +104,20 @@ export function AuthForm() {
 
         <div className="space-y-3">
           <HoverBorderGradient className="w-full rounded-md">
-            <AnimatedGradientButton type="submit" className="w-full">
-              <div className="flex items-center justify-center gap-2">
-                <Lock className="h-4 w-4" />
-                Iniciar Sesión
-              </div>
-            </AnimatedGradientButton>
+            {isLoading ? (
+              <AnimatedGradientButton type="button" className="w-full">
+                <div className="flex items-center justify-center gap-2">
+                  <Loader className="animate-spin" />
+                </div>
+              </AnimatedGradientButton>
+            ) : (
+              <AnimatedGradientButton type="submit" className="w-full">
+                <div className="flex items-center justify-center gap-2">
+                  <Lock className="h-4 w-4" />
+                  Iniciar Sesión
+                </div>
+              </AnimatedGradientButton>
+            )}
           </HoverBorderGradient>
 
           <div className="flex flex-col space-y-2 text-center">
