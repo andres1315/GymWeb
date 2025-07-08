@@ -9,7 +9,7 @@ import { Membership } from "@/features/Home/page/Membership"
   return (
     <RoutesNotFound>
       <Route path="/" element={<PrivateLayout/>} >
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route path="/" element={<Navigate to="/home/dashboard" />} />
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/membership" element={<Membership/>} />

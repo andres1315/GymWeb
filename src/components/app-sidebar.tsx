@@ -12,7 +12,6 @@ import {
   SquareTerminal,
 } from "lucide-react"
 
-import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
@@ -36,44 +35,7 @@ const data = {
       name: "Acme Inc",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: SquareTerminal,
-      isActive: true,
-      
-    },
-    {
-      title: "Clientes",
-      url: "#",
-      icon: Bot,
-      
-    },
-    {
-      title: "Membresias",
-      url: "#",
-      icon: BookOpen,
-      
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      
-    },
+    }
   ],
   projects: [
     {
@@ -98,7 +60,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
         

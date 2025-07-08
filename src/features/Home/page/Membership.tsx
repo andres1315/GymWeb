@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Activity, Calendar, Clock, Copy, CreditCard, DollarSign, Eye, MoreVertical, Plus, Save, Settings, Star, TrendingUp, Users, Zap } from "lucide-react";
+import { Activity, Calendar, Clock, CreditCard, DollarSign, Plus, Save, Settings, Star, TrendingUp, Users, Zap } from "lucide-react";
 import { useState } from "react";
 
 const membershipPlans = [
@@ -386,6 +386,147 @@ export const Membership = () => {
                 </CardContent>
               </Card>
             </div>
+            <div className="grid grid-cols-2 gap-8">
+              {/* Left Panel - Core Settings */}
+              <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center space-x-2">
+                    <Settings className="h-5 w-5 text-emerald-400" />
+                    <span>Configuración Principal</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Pago</Label>
+                        <p className="text-xs text-gray-400 mt-1">Generar Pago</p>
+                        
+                      </div>
+                      <Switch className="data-[state=checked]:bg-emerald-500" />
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Fecha de Vcto</Label>
+                        <p className="text-xs text-gray-400 mt-1">Generar Movimiento de Fecha de vencimiento</p>
+                      </div>
+                      <Switch className="data-[state=checked]:bg-emerald-500" />
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Factura</Label>
+                        <p className="text-xs text-gray-400 mt-1">Generar Factura de Venta</p>
+                        
+                      </div>
+                      <Switch className="data-[state=checked]:bg-emerald-500" />
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Código de Cliente</Label>
+                        <p className="text-xs text-gray-400 mt-1">Generar código único por cliente</p>
+                      </div>
+                      <Switch className="data-[state=checked]:bg-emerald-500" />
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Generar Movimiento de Fecha de Vcto</Label>
+                        
+                      </div>
+                      <Switch className="data-[state=checked]:bg-emerald-500" />
+                    </div>
+
+                    
+
+                    <div className="space-y-3">
+                      <Label className="text-white font-medium">Entradas Máximas por Día</Label>
+                      <div className="px-4 py-3 rounded-xl bg-white/5">
+                        <Slider defaultValue={[3]} max={10} min={1} step={1} className="w-full" />
+                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                          <span>1</span>
+                          <span className="text-emerald-400 font-medium">3 entradas</span>
+                          <span>10</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-white font-medium">Descuento Aplicable (%)</Label>
+                      <div className="px-4 py-3 rounded-xl bg-white/5">
+                        <Slider defaultValue={[0]} max={50} min={0} step={5} className="w-full" />
+                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                          <span>0%</span>
+                          <span className="text-purple-400 font-medium">Sin descuento</span>
+                          <span>50%</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Right Panel - Access & Restrictions */}
+              <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-white flex items-center space-x-2">
+                    <Clock className="h-5 w-5 text-blue-400" />
+                    <span>Control de Acceso</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="space-y-4">
+                    <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20">
+                      <Label className="text-white font-medium mb-3 block">Días de la Semana</Label>
+                      <div className="grid grid-cols-7 gap-2">
+                        {["L", "M", "X", "J", "V", "S", "D"].map((day, index) => (
+                          <div key={day} className="text-center">
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all ${
+                                index < 5
+                                  ? "bg-emerald-500 text-white shadow-lg"
+                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
+                              }`}
+                            >
+                              {day}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-400 mt-2">Lunes a Viernes habilitados</p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label className="text-white font-medium">Horario de Acceso</Label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label className="text-xs text-gray-400">Desde</Label>
+                          <Input
+                            type="time"
+                            defaultValue="06:00"
+                            className="bg-white/10 border-white/20 text-white mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-400">Hasta</Label>
+                          <Input
+                            type="time"
+                            defaultValue="22:00"
+                            className="bg-white/10 border-white/20 text-white mt-1"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                      <div>
+                        <Label className="text-white font-medium">Validación Manual</Label>
+                        <p className="text-xs text-gray-400 mt-1">Requiere aprobación del staff</p>
+                      </div>
+                      <Switch className="data-[state=checked]:bg-blue-500" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Payment Configuration */}
             <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
@@ -466,6 +607,7 @@ export const Membership = () => {
                 Guardar Configuración
               </Button>
             </div>
+            
           </div>
         </div>
       </div>

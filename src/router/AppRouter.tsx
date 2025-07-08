@@ -16,7 +16,7 @@ export const AppRouter = () =>{
 
       <BrowserRouter>
         <RoutesNotFound>
-          <Route path='/' element={<Navigate to="/home" replace/>} />
+          <Route path='/' element={<Navigate to="/home/" replace/>} />
           <Route path='/login' element={<Login/>} />
           <Route element={<PrivateGuard/>}>
             <Route path="/home/*" element={<PrivateRouter/>}/>
