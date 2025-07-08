@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardAction, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { DollarSign, Plus, TrendingUp, Users } from "lucide-react";
+import { Plus, TrendingUp } from "lucide-react";
 
 export function ListMemberShip({
   setSelectedPlan,
@@ -19,7 +19,7 @@ export function ListMemberShip({
   selectedPlan,
 }) {
   return (
-    <div className="w-96 p-6 backdrop-blur-xl bg-white/5 border-r border-white/10">
+    <div className="w-96 p-6 backdrop-blur-xl bg-white/5 border-r border-white/10 flex flex-col h-full">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Planes Activos</h2>
@@ -43,41 +43,17 @@ export function ListMemberShip({
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <CardAction className="bg-gradient-to-r from-emerald-500/20 to-teal-600/20 border-emerald-500/30 backdrop-blur-sm">
-            <CardContent className="p-3">
-              <div className="flex items-center space-x-2">
-                <Users className="h-4 w-4 text-emerald-400" />
-                <div>
-                  <p className="text-xs text-emerald-300">Total Miembros</p>
-                  <p className="text-lg font-bold text-white">470</p>
-                </div>
-              </div>
-            </CardContent>
-          </CardAction>
-          <Card className="bg-gradient-to-r from-purple-500/20 to-pink-600/20 border-purple-500/30 backdrop-blur-sm">
-            <CardContent className="p-3">
-              <div className="flex items-center space-x-2">
-                <DollarSign className="h-4 w-4 text-purple-400" />
-                <div>
-                  <p className="text-xs text-purple-300">Ingresos Mes</p>
-                  <p className="text-lg font-bold text-white">$45M</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        
       </div>
 
       {/* Plans List */}
-      <div className="space-y-3 max-h-[calc(100vh-20rem)] overflow-y-auto custom-scrollbar">
+      <div className="space-y-1 h-full overflow-y-auto">
         {filteredPlans.map((plan, index) => {
           const IconComponent = plan.icon;
           return (
             <Card
               key={plan.id}
-              className={`cursor-pointer transition-all duration-500 hover:scale-105 backdrop-blur-sm border-white/10 ${
+              className={`cursor-pointer transition-all duration-500 scale-95 hover:scale-100 backdrop-blur-sm border-white/10 ${
                 selectedPlan.id === plan.id
                   ? "bg-gradient-to-r from-emerald-500/30 to-teal-600/30 border-emerald-500/50 shadow-2xl shadow-emerald-500/25"
                   : "bg-white/5 hover:bg-white/10"
