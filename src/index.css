@@ -122,3 +122,32 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Scrollbar para tema claro (por defecto) */
+::-webkit-scrollbar {
+  width: 8px;
+  background: var(--sidebar-background, var(--muted-foreground));
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Scrollbar para tema oscuro */
+.dark ::-webkit-scrollbar {
+  background: var(--sidebar-background, var(--muted-foreground));
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--muted-foreground);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
