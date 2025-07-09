@@ -14,7 +14,14 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Clock, CreditCard, Save, Settings } from "lucide-react";
 
+import { z } from "zod";
+
 export function SettingMemberShip() {
+  const FormSchema = z.object({
+    marketing_emails: z.boolean().default(false).optional(),
+    security_emails: z.boolean(),
+  });
+
   return (
     <>
       <div className="grid grid-cols-2 gap-8">
