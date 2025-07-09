@@ -4,6 +4,7 @@ import { Dashboard } from "@/features/Home/page/Dashboard"
 import { Home } from "@/features/Home/page/Home"
 import { PrivateLayout } from "@/features/Home/layout/PrivateLayout"
 import { Membership } from "@/features/Home/page/Membership"
+import { Client } from "@/features/Home/page/Client"
 
  const PrivateRouter = () =>{
   return (
@@ -13,6 +14,7 @@ import { Membership } from "@/features/Home/page/Membership"
         <Route path="/dashboard" element={<Dashboard/>} />
         <Route path="/home" element={<Home/>} />
         <Route path="/membership" element={<Membership/>} />
+        <Route path="/clients" element={<Client/>} />
       </Route>
     </RoutesNotFound>
   )
