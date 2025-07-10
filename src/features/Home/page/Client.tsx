@@ -28,6 +28,8 @@ import { useState } from "react";
 import { ListMemberShip } from "../components/membership/ListMemberShip";
 import { TopCard } from "../components/membership/TopCard";
 import { SettingMemberShip } from "../components/membership/SettingMemberShip";
+import { ClientForm } from "../components/client/ClientForm";
+import { ClientList } from "../components/client/ClientList";
 
 const membershipPlans = [
   {
@@ -107,8 +109,8 @@ export const Client = () => {
   });
 
   return (
-    <div className="flex w-full bg-rose-700">
-      <ListMemberShip
+    <div className="flex w-full">
+      <ClientList
         filterActive={filterActive}
         setFilterActive={setFilterActive}
         filteredPlans={filteredPlans}
@@ -118,9 +120,7 @@ export const Client = () => {
 
       <div className="flex-1  overflow-auto">
         <div className="max-w-6xl mx-auto space-y-4">
-          <TopCard selectedPlan={selectedPlan} />
-
-          <SettingMemberShip />
+          <ClientForm />
         </div>
       </div>
     </div>

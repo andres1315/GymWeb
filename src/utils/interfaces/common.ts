@@ -2,6 +2,8 @@ export interface PersonType {
   id: number;
   name: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface DocumentType {
@@ -9,6 +11,8 @@ export interface DocumentType {
   name: string;
   code: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface TaxResponsability {
@@ -16,12 +20,16 @@ export interface TaxResponsability {
   name: string;
   code: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Gender {
   id: number;
   name: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Country {
@@ -29,10 +37,22 @@ export interface Country {
   name: string;
   code: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface HowDidYouHear {
   id: number;
   name: string;
   is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BloodType {
+  id: number;
+  name: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
 }
