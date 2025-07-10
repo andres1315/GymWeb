@@ -33,7 +33,7 @@ export const clientSchema = z.object({
     phone_emergency: z.string().max(20).optional(),
     date_of_birth: z.string().nullable(),
     place_of_birth: z.string().optional(),
-
+    blood_type_id: z.string().optional(),
 
 
 
