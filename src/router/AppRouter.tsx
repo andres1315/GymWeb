@@ -4,6 +4,7 @@ import { PrivateGuard } from "./PrivateGuard"
 
 import { RoutesNotFound } from "./RoutesNotFound"
 import { Suspense,lazy } from "react"
+import { Toaster } from "@/components/ui/sonner"
 
 const Login = lazy(()=> import('@/features/Login/page/Login'))
 const PrivateRouter = lazy(()=> import('./PrivateRouter'))
@@ -24,6 +25,7 @@ export const AppRouter = () =>{
           <Route path="*" element={<>Not found</>} />
         </RoutesNotFound>
       </BrowserRouter>
+      <Toaster />
     </Suspense>
   )
 }
