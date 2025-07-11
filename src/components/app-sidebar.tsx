@@ -12,7 +12,7 @@ import {
   SquareTerminal,
 } from "lucide-react"
 
-import { NavProjects } from "@/components/nav-projects"
+
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -22,6 +22,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { NavMain } from "./nav-main"
+
 
 // This is sample data.
 const data = {
@@ -64,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         
-        <NavProjects projects={data.projects} />
+        <NavMain items={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

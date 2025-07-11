@@ -25,6 +25,7 @@ import { useForm, type FieldErrors } from "react-hook-form";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CustomCard } from "@/components/ui/customCard";
 
 // Schema de Zod para toda la configuración de membresía
 export const MembershipConfigSchema = z.object({
@@ -38,7 +39,7 @@ export const MembershipConfigSchema = z.object({
   descuento_aplicable: z.number().min(0).max(50),
 
   // Control de Acceso
-  dias_semana: z.array(z.enum(["L", "M", "X", "J", "V", "S", "D"])),
+  dias_semana: z.array(z.enum(["L", "M", "X", "J", "V", "S", "D", "F"])),
   horario_desde: z.string(), // formato "HH:mm"
   horario_hasta: z.string(), // formato "HH:mm"
   validacion_manual: z.boolean(),
@@ -66,6 +67,22 @@ export const MembershipConfigSchema = z.object({
   recordatorios: z.boolean(),
   codigo_puc: z.string(),
   centro_costo: z.enum(["classes", "personal"]),
+  max_entry_per_day: z
+    .number()
+    .min(1, {
+      message: "Debe ser mayor a 0",
+    })
+    .max(10, {
+      message: "Debe ser menor a 11",
+    }),
+  percentage_discount: z
+    .number()
+    .min(0, {
+      message: "Debe ser 0 o mayor",
+    })
+    .max(50, {
+      message: "Debe ser 50 o menor",
+    }),
 });
 
 export function SettingMemberShip() {
@@ -101,6 +118,8 @@ export function SettingMemberShip() {
       recordatorios: false,
       codigo_puc: "",
       centro_costo: "classes",
+      max_entry_per_day: 1,
+      percentage_discount: 0,
     },
   });
 
@@ -111,405 +130,808 @@ export function SettingMemberShip() {
 
   function onInvalid(errors: FieldErrors) {
     console.log({ errors });
-    
   }
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit,onInvalid)}>
-        <div className="grid grid-cols-2 gap-8">
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center space-x-2">
-                <Settings className="h-5 w-5 text-emerald-400" />
-                <span>Configuración Principal</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="generar_pago"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                      <div>
-                        <FormLabel>Pago</FormLabel>
-                        <FormDescription className="text-xs mt-1">Generar Pago</FormDescription>
-                      </div>
+      <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
+        {/* main Config */}
+        <CustomCard title="Configuración Principal" Icon={Settings}>
+          <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+            <div>
+              <FormField
+                control={form.control}
+                name="generar_pago"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                    <div>
+                      <FormLabel>Pago</FormLabel>
+                      <FormDescription className="text-xs mt-1">
+                        Generar pago.
+                      </FormDescription>
+                    </div>
 
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div>
+              <FormField
+                control={form.control}
+                name="generar_fecha_vcto"
+                render={({ field }) => (
+                  <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                    <div>
+                      <FormLabel>Fecha de Vcto</FormLabel>
+                      <FormDescription className="text-xs mt-1">
+                        Generar movimiento de fecha de vencimiento.
+                      </FormDescription>
+                    </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
-                    <Label className="text-white font-medium">
-                      Fecha de Vcto
-                    </Label>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Generar Movimiento de Fecha de vencimiento
-                    </p>
+                    <FormLabel>Factura</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Generar factura de venta
+                    </FormDescription>
                   </div>
-                  <Switch className="data-[state=checked]:bg-emerald-500" />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
-                    <Label className="text-white font-medium">Factura</Label>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Generar Factura de Venta
-                    </p>
-                  </div>
-                  <Switch className="data-[state=checked]:bg-emerald-500" />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                  <div>
-                    <Label className="text-white font-medium">
-                      Código de Cliente
-                    </Label>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <FormLabel>Código de Cliente</FormLabel>
+                    <FormDescription className="text-xs mt-1">
                       Generar código único por cliente
-                    </p>
+                    </FormDescription>
                   </div>
-                  <Switch className="data-[state=checked]:bg-emerald-500" />
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
-                    <Label className="text-white font-medium">
-                      Generar Movimiento de Fecha de Vcto
-                    </Label>
+                    <FormLabel>Plan Controlado</FormLabel>
                   </div>
-                  <Switch className="data-[state=checked]:bg-emerald-500" />
-                </div>
 
-                <div className="space-y-3">
-                  <Label className="text-white font-medium">
-                    Entradas Máximas por Día
-                  </Label>
-                  <div className="px-4 py-3 rounded-xl bg-white/5">
-                    <Slider
-                      defaultValue={[3]}
-                      max={10}
-                      min={1}
-                      step={1}
-                      className="w-full"
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
-                    <div className="flex justify-between text-xs text-gray-400 mt-2">
-                      <span>1</span>
-                      <span className="text-emerald-400 font-medium">
-                        3 entradas
-                      </span>
-                      <span>10</span>
-                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Lista Integrantes</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Solicita lista de Integrantes en el momento de un pago
+                      grupal adicional.
+                    </FormDescription>
                   </div>
-                </div>
 
-                <div className="space-y-3">
-                  <Label className="text-white font-medium">
-                    Descuento Aplicable (%)
-                  </Label>
-                  <div className="px-4 py-3 rounded-xl bg-white/5">
-                    <Slider
-                      defaultValue={[0]}
-                      max={50}
-                      min={0}
-                      step={5}
-                      className="w-full"
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
                     />
-                    <div className="flex justify-between text-xs text-gray-400 mt-2">
-                      <span>0%</span>
-                      <span className="text-purple-400 font-medium">
-                        Sin descuento
-                      </span>
-                      <span>50%</span>
-                    </div>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Afiliado puede ser Invitado</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Si el afiliado esta inscrito en este plan puede ser
+                      invitado.
+                    </FormDescription>
                   </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Right Panel - Access & Restrictions */}
-          <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center space-x-2">
-                <Clock className="h-5 w-5 text-blue-400" />
-                <span>Control de Acceso</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/10 border border-blue-500/20">
-                  <Label className="text-white font-medium mb-3 block">
-                    Días de la Semana
-                  </Label>
-                  <div className="grid grid-cols-7 gap-2">
-                    {["L", "M", "X", "J", "V", "S", "D"].map((day, index) => (
-                      <div key={day} className="text-center">
-                        <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all ${
-                            index < 5
-                              ? "bg-emerald-500 text-white shadow-lg"
-                              : "bg-white/10 text-gray-400 hover:bg-white/20"
-                          }`}
-                        >
-                          {day}
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Exige Huella</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Exige validación solo con huella.
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Valoración Fisioterapia</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Incluye valoración con fisioterapia.
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Requiere Bono Regalo</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Solicita N°. de bono regalo.
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Permite el ingreso a todas las sedes</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Cobra inscripción</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generar_fecha_vcto"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>
+                      Controla ver ingresos de usuarios del plan
+                    </FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <div />
+
+            <FormField
+              control={form.control}
+              name="percentage_discount"
+              render={({ field }) => (
+                <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5">
+                  <FormLabel>Descuento Aplicable (%)</FormLabel>
+
+                  <div className="flex items-center justify-betwee">
+                    <FormControl>
+                      <div className="px-4 py-1 rounded-xl  w-full">
+                        <Slider
+                          defaultValue={[field.value]}
+                          max={50}
+                          min={0}
+                          step={1}
+                          onValueChange={field.onChange}
+                          className="w-full"
+                        />
+                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                          <span>0%</span>
+                          <span className="text-emerald-400 font-medium">
+                            {field.value > 0 ? `${field.value}%` : "Sin"}{" "}
+                            descuento
+                          </span>
+                          <span>50%</span>
                         </div>
                       </div>
-                    ))}
+                    </FormControl>
                   </div>
-                  <p className="text-xs text-gray-400 mt-2">
-                    Lunes a Viernes habilitados
-                  </p>
-                </div>
+                </FormItem>
+              )}
+            />
+          </div>
+        </CustomCard>
 
-                <div className="space-y-3">
-                  <Label className="text-white font-medium">
-                    Horario de Acceso
-                  </Label>
+        {/* Control de Acceso */}
+        <CustomCard title="Control de Acceso" Icon={Clock}>
+          <div className="space-y-6">
+            <div className="flex justify-between gap-4">
+              <FormField
+                control={form.control}
+                name="max_entry_per_day"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
+                    <FormLabel>Entradas Máximas por Día</FormLabel>
+
+                    <div className="flex items-center justify-between ">
+                      <FormControl>
+                        <div className="px-4 py-1 rounded-xl  w-full">
+                          <Slider
+                            defaultValue={[field.value]}
+                            max={10}
+                            min={1}
+                            step={1}
+                            onValueChange={field.onChange}
+                            className="w-full"
+                          />
+                          <div className="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>1</span>
+                            <span className="text-emerald-400 font-medium">
+                              {field.value} entradas
+                            </span>
+                            <span>10</span>
+                          </div>
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="max_entry_per_day"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
+                    <FormLabel>
+                      Restricción de Número de dias por Semana
+                    </FormLabel>
+
+                    <div className="flex items-center justify-between ">
+                      <FormControl>
+                        <div className="px-4 py-1 rounded-xl  w-full">
+                          <Slider
+                            defaultValue={[field.value]}
+                            max={7}
+                            min={0}
+                            step={1}
+                            onValueChange={field.onChange}
+                            className="w-full"
+                          />
+                          <div className="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>1</span>
+                            <span className="text-emerald-400 font-medium">
+                              {field.value} Dia (s)
+                            </span>
+                            <span>7</span>
+                          </div>
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="max_entry_per_day"
+              render={({ field }) => (
+                <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
+                  <FormLabel>
+                    Si es plan Grupal, controla Minimo y Máximo N° de
+                    integrantes.
+                  </FormLabel>
+
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label className="text-xs text-gray-400">Desde</Label>
+                      <Label className="text-xs text-gray-400">Minimo</Label>
                       <Input
-                        type="time"
-                        defaultValue="06:00"
+                        type="number"
+                        defaultValue="0"
                         className="bg-white/10 border-white/20 text-white mt-1"
                       />
                     </div>
                     <div>
-                      <Label className="text-xs text-gray-400">Hasta</Label>
+                      <Label className="text-xs text-gray-400">Maximo</Label>
                       <Input
-                        type="time"
-                        defaultValue="22:00"
+                        type="number"
+                        defaultValue="0"
                         className="bg-white/10 border-white/20 text-white mt-1"
                       />
                     </div>
                   </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                  <div>
-                    <Label className="text-white font-medium">
-                      Validación Manual
-                    </Label>
-                    <p className="text-xs text-gray-400 mt-1">
-                      Requiere aprobación del staff
-                    </p>
-                  </div>
-                  <Switch className="data-[state=checked]:bg-blue-500" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center space-x-2">
-              <Settings className="h-5 w-5 text-emerald-400" />
-              <span>Configuración Adicional</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="gap-6 grid grid-cols-2">
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Dcto Cumpleaños
-                  </Label>
-                  <p className="text-xs text-gray-400 mt-1">
-                    % Descuento mes de Cumpleaños
-                  </p>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Obsequio / Dcto
-                  </Label>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Elige Obsequio o Descuento de Cumpleaños
-                  </p>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Dcto Pronto Pago
-                  </Label>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Descento por Pronto Pago
-                  </p>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Dcto Pronto Pago 1er pago
-                  </Label>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Aplica Descuento Pronto Pago desde el 1er Pago
-                  </p>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Incremento por Mora en Pago
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Genera Plan Pago
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Inicia 1er día del Mes
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Contiene paquetes de clases
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">Expide FICHA</Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Captar Abonos
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">Genera CxC</Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-              <div className="flex items-center justify-between p-4 rounded-xl bg-white/5">
-                <div>
-                  <Label className="text-white font-medium">
-                    Permite Ingreso a todas las sedes
-                  </Label>
-                </div>
-                <Switch className="data-[state=checked]:bg-emerald-500" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center space-x-2">
-              <CreditCard className="h-5 w-5 text-purple-400" />
-              <span>Configuración de Pagos</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-6">
-              <div className="space-y-3">
-                <Label className="text-white font-medium">
-                  Métodos de Pago
-                </Label>
-                <div className="space-y-2">
-                  {[
-                    "Efectivo",
-                    "Tarjeta de Crédito",
-                    "Transferencia",
-                    "PayPal",
-                  ].map((method) => (
-                    <div
-                      key={method}
-                      className="flex items-center space-x-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                    >
-                      <Checkbox className="border-white/30" />
-                      <span className="text-white text-sm">{method}</span>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="dias_semana"
+              render={({ field }) => {
+                const dias = [
+                  { label: "L" as const, nombre: "Lunes" },
+                  { label: "M" as const, nombre: "Martes" },
+                  { label: "X" as const, nombre: "Miércoles" },
+                  { label: "J" as const, nombre: "Jueves" },
+                  { label: "V" as const, nombre: "Viernes" },
+                  { label: "S" as const, nombre: "Sábado" },
+                  { label: "D" as const, nombre: "Domingo" },
+                  { label: "F" as const, nombre: "Festivos" },
+                ];
+                // Adaptar el valor para incluir festivos si está presente
+                const value = (field.value || []) as (
+                  | "L"
+                  | "M"
+                  | "X"
+                  | "J"
+                  | "V"
+                  | "S"
+                  | "D"
+                  | "F"
+                )[];
+                return (
+                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
+                    <FormLabel className="text-white font-medium mb-3 block">
+                      Invitado los Días
+                    </FormLabel>
+                    <div className="grid grid-cols-8 gap-2">
+                      {dias.map((dia) => {
+                        const checked = value.includes(dia.label);
+                        return (
+                          <div key={dia.label} className="text-center">
+                            <button
+                              type="button"
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
+                                checked
+                                  ? "bg-emerald-500 text-white shadow-lg"
+                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
+                              }`}
+                              aria-pressed={checked}
+                              onClick={() => {
+                                if (checked) {
+                                  field.onChange(
+                                    value.filter((v) => v !== dia.label) as (
+                                      | "L"
+                                      | "M"
+                                      | "X"
+                                      | "J"
+                                      | "V"
+                                      | "S"
+                                      | "D"
+                                      | "F"
+                                    )[]
+                                  );
+                                } else {
+                                  field.onChange([...value, dia.label] as (
+                                    | "L"
+                                    | "M"
+                                    | "X"
+                                    | "J"
+                                    | "V"
+                                    | "S"
+                                    | "D"
+                                    | "F"
+                                  )[]);
+                                }
+                              }}
+                              title={dia.nombre}
+                            >
+                              {dia.label}
+                            </button>
+                          </div>
+                        );
+                      })}
                     </div>
-                  ))}
+                    <p className="text-xs text-gray-400 mt-2">
+                      Selecciona los días en los que el invitado puede asistir
+                    </p>
+                  </FormItem>
+                );
+              }}
+            />
+            <div className="space-y-3">
+              <Label className="text-white font-medium">
+                Restricción de horario
+              </Label>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs text-gray-400">Desde</Label>
+                  <Input
+                    type="time"
+                    defaultValue="06:00"
+                    className="bg-white/10 border-white/20 text-white mt-1"
+                  />
                 </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-white font-medium">
-                  Configuración Avanzada
-                </Label>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-white text-sm">Pagos Parciales</span>
-                    <Switch className="data-[state=checked]:bg-purple-500" />
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-white text-sm">Auto-renovación</span>
-                    <Switch className="data-[state=checked]:bg-purple-500" />
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
-                    <span className="text-white text-sm">Recordatorios</span>
-                    <Switch className="data-[state=checked]:bg-purple-500" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-white font-medium">
-                  Integración Contable
-                </Label>
-                <div className="space-y-3">
-                  <div>
-                    <Label className="text-xs text-gray-400">
-                      Código P.U.C.
-                    </Label>
-                    <Input
-                      placeholder="01-MENSUALIDAD"
-                      className="bg-white/10 border-white/20 text-white mt-1"
-                    />
-                  </div>
-                  <div>
-                    <Label className="text-xs text-gray-400">
-                      Centro de Costo
-                    </Label>
-                    <Select>
-                      <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                        <SelectValue placeholder="Seleccionar" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="classes">Clases Grupales</SelectItem>
-                        <SelectItem value="personal">
-                          Entrenamiento Personal
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <Label className="text-xs text-gray-400">Hasta</Label>
+                  <Input
+                    type="time"
+                    defaultValue="22:00"
+                    className="bg-white/10 border-white/20 text-white mt-1"
+                  />
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+            <FormField
+              control={form.control}
+              name="dias_semana"
+              render={({ field }) => {
+                const dias = [
+                  { label: "L" as const, nombre: "Lunes" },
+                  { label: "M" as const, nombre: "Martes" },
+                  { label: "X" as const, nombre: "Miércoles" },
+                  { label: "J" as const, nombre: "Jueves" },
+                  { label: "V" as const, nombre: "Viernes" },
+                  { label: "S" as const, nombre: "Sábado" },
+                  { label: "D" as const, nombre: "Domingo" },
+                ];
+                // Adaptar el valor para incluir festivos si está presente
+                const value = (field.value || []) as (
+                  | "L"
+                  | "M"
+                  | "X"
+                  | "J"
+                  | "V"
+                  | "S"
+                  | "D"
+                )[];
+                return (
+                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
+                    <FormLabel className="text-white font-medium mb-3 block">
+                      Restriccion de Dias
+                    </FormLabel>
+                    <div className="grid grid-cols-7 gap-2">
+                      {dias.map((dia) => {
+                        const checked = value.includes(dia.label);
+                        return (
+                          <div key={dia.label} className="text-center">
+                            <button
+                              type="button"
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
+                                checked
+                                  ? "bg-emerald-500 text-white shadow-lg"
+                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
+                              }`}
+                              aria-pressed={checked}
+                              onClick={() => {
+                                if (checked) {
+                                  field.onChange(
+                                    value.filter((v) => v !== dia.label) as (
+                                      | "L"
+                                      | "M"
+                                      | "X"
+                                      | "J"
+                                      | "V"
+                                      | "S"
+                                      | "D"
+                                      | "F"
+                                    )[]
+                                  );
+                                } else {
+                                  field.onChange([...value, dia.label] as (
+                                    | "L"
+                                    | "M"
+                                    | "X"
+                                    | "J"
+                                    | "V"
+                                    | "S"
+                                    | "D"
+                                    | "F"
+                                  )[]);
+                                }
+                              }}
+                              title={dia.nombre}
+                            >
+                              {dia.label}
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {/* <p className="text-xs text-gray-400 mt-2">
+                      Selecciona los días en los que el invitado puede asistir
+                    </p> */}
+                  </FormItem>
+                );
+              }}
+            />
+
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Validación Manual
+                </Label>
+                <p className="text-xs text-gray-400 mt-1">
+                  Requiere aprobación del staff
+                </p>
+              </div>
+              <Switch className="data-[state=checked]:bg-blue-500" />
+            </div>
+          </div>
+        </CustomCard>
+
+        {/* Configuración Adicional */}
+        <CustomCard title="Configuración Adicional" Icon={Settings}>
+          <div className="gap-6 grid grid-cols-2">
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Dcto Cumpleaños
+                </Label>
+                <p className="text-xs text-gray-400 mt-1">
+                  % Descuento mes de Cumpleaños
+                </p>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Obsequio / Dcto
+                </Label>
+                <p className="text-xs text-gray-400 mt-1">
+                  Elige Obsequio o Descuento de Cumpleaños
+                </p>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Dcto Pronto Pago
+                </Label>
+                <p className="text-xs text-gray-400 mt-1">
+                  Descento por Pronto Pago
+                </p>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Dcto Pronto Pago 1er pago
+                </Label>
+                <p className="text-xs text-gray-400 mt-1">
+                  Aplica Descuento Pronto Pago desde el 1er Pago
+                </p>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Incremento por Mora en Pago
+                </Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Genera Plan Pago
+                </Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Inicia 1er día del Mes
+                </Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Contiene paquetes de clases
+                </Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">Expide FICHA</Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">Captar Abonos</Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">Genera CxC</Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+              <div>
+                <Label className="text-white font-medium">
+                  Permite Ingreso a todas las sedes
+                </Label>
+              </div>
+              <Switch className="data-[state=checked]:bg-emerald-500" />
+            </div>
+          </div>
+        </CustomCard>
+
+        {/* Configuración de Pagos*/}
+        <CustomCard title="Configuración de Pagos" Icon={CreditCard}>
+          <div className="grid grid-cols-3 gap-6">
+            <div className="space-y-3">
+              <Label className="text-white font-medium">Métodos de Pago</Label>
+              <div className="space-y-2">
+                {[
+                  "Efectivo",
+                  "Tarjeta de Crédito",
+                  "Transferencia",
+                  "PayPal",
+                ].map((method) => (
+                  <div
+                    key={method}
+                    className="flex items-center space-x-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  >
+                    <Checkbox className="border-white/30" />
+                    <span className="text-white text-sm">{method}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-white font-medium">
+                Configuración Avanzada
+              </Label>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                  <span className="text-white text-sm">Pagos Parciales</span>
+                  <Switch className="data-[state=checked]:bg-purple-500" />
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                  <span className="text-white text-sm">Auto-renovación</span>
+                  <Switch className="data-[state=checked]:bg-purple-500" />
+                </div>
+                <div className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+                  <span className="text-white text-sm">Recordatorios</span>
+                  <Switch className="data-[state=checked]:bg-purple-500" />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Label className="text-white font-medium">
+                Integración Contable
+              </Label>
+              <div className="space-y-3">
+                <div>
+                  <Label className="text-xs text-gray-400">Código P.U.C.</Label>
+                  <Input
+                    placeholder="01-MENSUALIDAD"
+                    className="bg-white/10 border-white/20 text-white mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs text-gray-400">
+                    Centro de Costo
+                  </Label>
+                  <Select>
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
+                      <SelectValue placeholder="Seleccionar" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="classes">Clases Grupales</SelectItem>
+                      <SelectItem value="personal">
+                        Entrenamiento Personal
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CustomCard>
 
         <div className="flex justify-end space-x-4">
           <Button
