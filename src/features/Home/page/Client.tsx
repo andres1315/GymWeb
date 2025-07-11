@@ -24,12 +24,15 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ListMemberShip } from "../components/membership/ListMemberShip";
 import { TopCard } from "../components/membership/TopCard";
 import { SettingMemberShip } from "../components/membership/SettingMemberShip";
 import { ClientForm } from "../components/client/ClientForm";
 import { ClientList } from "../components/client/ClientList";
+import type { Client as IClient } from "@/utils/interfaces/client";
+import ClientService from "@/services/client/ClientService";
+import { HomeClients } from "../components/client/HomeClients";
 
 const membershipPlans = [
   {
@@ -94,7 +97,12 @@ const membershipPlans = [
   },
 ];
 
+export type ActionModule = 'create' | 'update' | 'view' | 'dashboard';
+
 export const Client = () => {
+
+  const [actionModule, setActionModule] = useState<ActionModule>('dashboard');
+
   const [selectedPlan, setSelectedPlan] = useState(membershipPlans[0]);
 
   const [filterActive, setFilterActive] = useState("all");
@@ -108,19 +116,47 @@ export const Client = () => {
     return matchesSearch && matchesFilter;
   });
 
+  const [clients, setClients] = useState<IClient[]>([]);
+  const [currentClient, setCurrentClient] = useState<IClient>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    getClients()
+  }, [])
+
+  const getClients = async () => {
+    setIsLoading(true);
+    const clients = await ClientService.getAll();
+    if (clients.success) {
+      setClients(clients.data ?? [])
+    }
+    setIsLoading(false);
+  }
+
   return (
     <div className="flex w-full">
       <ClientList
-        filterActive={filterActive}
-        setFilterActive={setFilterActive}
-        filteredPlans={filteredPlans}
-        setSelectedPlan={setSelectedPlan}
-        selectedPlan={selectedPlan}
+        isLoading={isLoading}
+        clients={clients}
+        currentClient={currentClient}
+        setCurrentClient={setCurrentClient}
+        setActionModule={setActionModule}
       />
 
-      <div className="flex-1  overflow-auto">
+      <div className="flex-1 overflow-auto">
         <div className="max-w-6xl mx-auto space-y-4">
-          <ClientForm />
+          {(actionModule == 'create' || actionModule == "update" || actionModule == "view") && (
+            <ClientForm
+              actionModule={actionModule}
+              setActionModule={setActionModule}
+              getClients={getClients}
+              currentClient={currentClient}
+            />
+          )}
+
+          {actionModule == 'dashboard' && (
+            <HomeClients />
+          )}
         </div>
       </div>
     </div>

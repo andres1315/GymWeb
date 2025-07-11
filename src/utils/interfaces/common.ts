@@ -56,3 +56,13 @@ export interface BloodType {
   created_at: string;
   updated_at: string;
 }
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  next_cursor: string | null;
+  next_page_url: string | null;
+  prev_cursor: string | null;
+  prev_page_url: string | null;
+  path: string;
+  per_page: number;
+}

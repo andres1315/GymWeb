@@ -5,6 +5,7 @@ export interface Client {
     first_name: string;
     last_name: string;
     is_leader: boolean;
+    is_active: boolean;
     enrollment_date: string;
     document_type_id: number;
     identification: string;

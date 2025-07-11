@@ -12,15 +12,17 @@ import { Switch } from "@/components/ui/switch";
 import { useEffect, useState } from "react";
 import DocumentTypesService from "@/services/documentTypes/DocumentTypesService";
 import PersonTypesService from "@/services/personTypes/PersonTypesService";
+import type { ActionModule } from "@/features/Home/page/Client";
 import type { ClientFormValues } from "../ClientForm";
 import type { Control } from "react-hook-form";
 import type { DocumentType, PersonType } from "@/utils/interfaces/common";
 
 interface BasicDataProps {
     control: Control<ClientFormValues>;
+    actionModule: ActionModule;
 }
 
-export function BasicData({ control }: BasicDataProps) {
+export function BasicData({ control, actionModule }: BasicDataProps) {
 
     const [documentsTypes, setDocumentsTypes] = useState<DocumentType[]>([]);
     const [personsTypes, setPersonsTypes] = useState<PersonType[]>([]);
@@ -47,15 +49,16 @@ export function BasicData({ control }: BasicDataProps) {
     return (
         <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
             <CardHeader>
-                <CardTitle className="text-white flex items-center space-x-2">
+                <CardTitle className="dark:text-white flex items-center space-x-2">
                     <User className="h-5 w-5 text-emerald-400" />
                     <span>Datos Básicos</span>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6">
+            <CardContent>
                 <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
                     <FormField
                         control={control}
+                        disabled={actionModule == 'view'}
                         name="enrollment_date"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
@@ -65,6 +68,7 @@ export function BasicData({ control }: BasicDataProps) {
                                         <Button
                                             variant="outline"
                                             className={`w-full justify-start text-left font-normal`}
+                                            disabled={actionModule === 'view'}
                                         >
                                             <CalendarIcon className="mr-2 h-4 w-4" />
                                             {field.value}
@@ -81,6 +85,7 @@ export function BasicData({ control }: BasicDataProps) {
                                                     field.onChange(null);
                                                 }
                                             }}
+                                            disabled={actionModule === 'view'}
                                         />
                                     </PopoverContent>
                                 </Popover>
@@ -96,11 +101,11 @@ export function BasicData({ control }: BasicDataProps) {
                             <FormItem>
                                 <Label>Tipo de Documento:</Label>
                                 <FormControl>
-                                    <Select>
+                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
                                         <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
                                             <SelectValue placeholder="Seleccionar" />
                                         </SelectTrigger>
-                                        <SelectContent onChange={field.onChange}>
+                                        <SelectContent>
                                             {documentsTypes.map(item => (
                                                 <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
                                             ))}
@@ -119,7 +124,7 @@ export function BasicData({ control }: BasicDataProps) {
                             <FormItem>
                                 <Label>Identificación:</Label>
                                 <FormControl>
-                                    <Input placeholder="Ej: 1225987485" {...field} />
+                                    <Input disabled={actionModule === 'view'} placeholder="Ej: 1225987485" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -133,7 +138,7 @@ export function BasicData({ control }: BasicDataProps) {
                             <FormItem>
                                 <Label>Nombre:</Label>
                                 <FormControl>
-                                    <Input placeholder="Escribe los nombres" {...field} />
+                                    <Input disabled={actionModule === 'view'} placeholder="Escribe los nombres" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -147,7 +152,7 @@ export function BasicData({ control }: BasicDataProps) {
                             <FormItem>
                                 <Label>Apellidos:</Label>
                                 <FormControl>
-                                    <Input placeholder="Escribe los apellidos" {...field} />
+                                    <Input disabled={actionModule === 'view'} placeholder="Escribe los apellidos" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -156,16 +161,16 @@ export function BasicData({ control }: BasicDataProps) {
 
                     <FormField
                         control={control}
-                        name="document_type_id"
+                        name="person_type_id"
                         render={({ field }) => (
                             <FormItem>
                                 <Label>Tipo de Persona:</Label>
                                 <FormControl>
-                                    <Select>
+                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
                                         <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
                                             <SelectValue placeholder="Seleccionar" />
                                         </SelectTrigger>
-                                        <SelectContent onChange={field.onChange}>
+                                        <SelectContent>
                                             {personsTypes.map(item => (
                                                 <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
                                             ))}
@@ -179,17 +184,17 @@ export function BasicData({ control }: BasicDataProps) {
 
                     <FormField
                         control={control}
-                        name="document_type_id"
+                        name="is_leader"
                         render={({ field }) => (
                             <FormItem>
-                                <div className="flex items-center justify-between mt-3 rounded-xl">
+                                <div className="flex items-center justify-between mt-2 rounded-xl">
                                     <div>
-                                        <Label className="text-white font-medium">
+                                        <Label className="dark:text-white font-medium">
                                             Lider de Grupo
                                         </Label>
                                     </div>
                                     <FormControl>
-                                        <Switch className="data-[state=checked]:bg-emerald-500" onCheckedChange={field.onChange} />
+                                        <Switch disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
                                     </FormControl>
                                 </div>
                                 <FormMessage />
