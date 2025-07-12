@@ -89,8 +89,8 @@ export const MembershipConfigSchema = z.object({
       "Festivo",
     ])
   ),
-  start_time_restriction:z.string(),
-  end_time_restriction:z.string(),
+  start_time_restriction: z.string(),
+  end_time_restriction: z.string(),
   restriction_days: z.array(
     z.enum([
       "Lunes",
@@ -104,21 +104,21 @@ export const MembershipConfigSchema = z.object({
     ])
   ),
 
-  validacion_manual: z.boolean(),
+  
 
   // Configuración Adicional
-  dcto_cumple: z.boolean(),
-  obsequio_dcto: z.boolean(),
-  dcto_pronto_pago: z.boolean(),
-  dcto_pronto_pago_1er: z.boolean(),
-  incremento_mora: z.boolean(),
-  genera_plan_pago: z.boolean(),
-  inicia_primer_dia_mes: z.boolean(),
-  contiene_paquetes_clases: z.boolean(),
-  expide_ficha: z.boolean(),
-  captar_abonos: z.boolean(),
-  genera_cxc: z.boolean(),
-  permite_ingreso_todas_sedes: z.boolean(),
+  birthday_discount: z.boolean(),
+  birthday_gift_discount: z.boolean(),
+  discount_early_payment: z.boolean(),
+  discount_early_payment_first: z.boolean(),
+  increase_arrears: z.boolean(),
+  generate_payment_plan: z.boolean(),
+  start_first_day_month: z.boolean(),
+  contains_class_package: z.boolean(),
+  issues_card: z.boolean(),
+  capture_gift_voucher: z.boolean(),
+  generate_cxc: z.boolean(),
+
 
   // Configuración de Pagos
   descuento_aplicable: z.number().min(0).max(50),
@@ -166,20 +166,20 @@ export function SettingMemberShip() {
       start_time_restriction: "06:00",
       end_time_restriction: "22:00",
       restriction_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-      age_restriction_value:0,
-      validacion_manual: false,
-      dcto_cumple: false,
-      obsequio_dcto: false,
-      dcto_pronto_pago: false,
-      dcto_pronto_pago_1er: false,
-      incremento_mora: false,
-      genera_plan_pago: false,
-      inicia_primer_dia_mes: false,
-      contiene_paquetes_clases: false,
-      expide_ficha: false,
-      captar_abonos: false,
-      genera_cxc: false,
-      permite_ingreso_todas_sedes: false,
+      age_restriction_value: 0,
+    
+      birthday_discount: false,
+      birthday_gift_discount: false,
+      discount_early_payment: false,
+      discount_early_payment_first: false,
+      increase_arrears: false,
+      generate_payment_plan: false,
+      start_first_day_month: false,
+      contains_class_package: false,
+      issues_card: false,
+      capture_gift_voucher: false,
+      generate_cxc: false,
+      
       charge_registration: false,
       metodos_pago: [],
       pagos_parciales: false,
@@ -737,8 +737,6 @@ export function SettingMemberShip() {
                       </FormItem>
                     )}
                   />
-                  
-                  
                 </div>
               </div>
             </div>
@@ -746,7 +744,6 @@ export function SettingMemberShip() {
               control={form.control}
               name="restriction_days"
               render={({ field }) => {
-                
                 // Adaptar el valor para incluir festivos si está presente
                 const value = (field.value || []) as (
                   | "Lunes"
@@ -879,108 +876,216 @@ export function SettingMemberShip() {
         {/* Configuración Adicional */}
         <CustomCard title="Configuración Adicional" Icon={Settings}>
           <div className="gap-6 grid grid-cols-2">
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Dcto Cumpleaños
-                </Label>
-                <p className="text-xs text-gray-400 mt-1">
-                  % Descuento mes de Cumpleaños
-                </p>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Obsequio / Dcto
-                </Label>
-                <p className="text-xs text-gray-400 mt-1">
-                  Elige Obsequio o Descuento de Cumpleaños
-                </p>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Dcto Pronto Pago
-                </Label>
-                <p className="text-xs text-gray-400 mt-1">
-                  Descento por Pronto Pago
-                </p>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Dcto Pronto Pago 1er pago
-                </Label>
-                <p className="text-xs text-gray-400 mt-1">
-                  Aplica Descuento Pronto Pago desde el 1er Pago
-                </p>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Incremento por Mora en Pago
-                </Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Genera Plan Pago
-                </Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Inicia 1er día del Mes
-                </Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Contiene paquetes de clases
-                </Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">Expide FICHA</Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">Captar Abonos</Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">Genera CxC</Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Permite Ingreso a todas las sedes
-                </Label>
-              </div>
-              <Switch className="data-[state=checked]:bg-emerald-500" />
-            </div>
+            <FormField
+              control={form.control}
+              name="birthday_discount"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Dcto Cumpleaños</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      % Descuento mes de Cumpleaños
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="birthday_gift_discount"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Obsequio / Dcto</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Elige Obsequio o Descuento de Cumpleaños
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discount_early_payment"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Dcto Pronto Pago</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Descento por Pronto Pago
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discount_early_payment_first"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Dcto Pronto Pago 1er pago</FormLabel>
+                    <FormDescription className="text-xs mt-1">
+                      Aplica Descuento Pronto Pago desde el 1er Pago
+                    </FormDescription>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="increase_arrears"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Incremento por Mora en Pago</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generate_payment_plan"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Genera Plan Pago</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="start_first_day_month"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Inicia 1er día del Mes</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="contains_class_package"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Contiene paquetes de clases</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="issues_card"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Expide FICHA</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="capture_gift_voucher"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Captar Abonos</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="generate_cxc"
+              render={({ field }) => (
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                  <div>
+                    <FormLabel>Genera CxC</FormLabel>
+                  </div>
+
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
           </div>
         </CustomCard>
 
@@ -1026,6 +1131,7 @@ export function SettingMemberShip() {
                           type="number"
                           defaultValue="0"
                           className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
                         />
                       </div>
                     </div>
