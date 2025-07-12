@@ -1,5 +1,5 @@
 import { encryptionService } from '../../utils/encryption/encryption';
-import api, { type ApiResponse } from '../../utils/api/axios';
+import api from '../../utils/api/axios';
 import type { AxiosResponse } from 'axios';
 import type { LoginCredentials, User, LoginResponse, AuthResult, UserResponse } from '../../common/auth.type';
 
