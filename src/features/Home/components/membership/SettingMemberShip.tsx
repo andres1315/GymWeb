@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -8,6 +6,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,22 +25,85 @@ import { useForm, type FieldErrors } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomCard } from "@/components/ui/customCard";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-// Schema de Zod para toda la configuración de membresía
 export const MembershipConfigSchema = z.object({
   // Configuración Principal
-  generar_pago: z.boolean(),
-  generar_fecha_vcto: z.boolean(),
-  generar_factura: z.boolean(),
-  generar_codigo_cliente: z.boolean(),
-  generar_movimiento_fecha_vcto: z.boolean(),
-  entradas_maximas_dia: z.number().min(1).max(10),
-  descuento_aplicable: z.number().min(0).max(50),
+  generate_payment: z.boolean(),
+  generate_expiration_date: z.boolean(),
+  generate_bill: z.boolean(),
+  generate_code_customer: z.boolean(),
+  generate_movement_exp_date: z.boolean(),
+  controlled_plan: z.boolean(),
+  required_list_members: z.boolean(),
+  can_be_invited: z.boolean(),
+  required_footprint: z.boolean(),
+  has_assessment_physical_therapy: z.boolean(),
+  required_gift_voucher: z.boolean(),
+  admission_all_sites: z.boolean(),
+  charge_registration: z.boolean(),
+  controls_user_access: z.boolean(),
 
   // Control de Acceso
-  dias_semana: z.array(z.enum(["L", "M", "X", "J", "V", "S", "D", "F"])),
-  horario_desde: z.string(), // formato "HH:mm"
-  horario_hasta: z.string(), // formato "HH:mm"
+  max_entry_per_day: z
+    .number()
+    .min(1, {
+      message: "Debe ser mayor a 0",
+    })
+    .max(10, {
+      message: "Debe ser menor a 11",
+    }),
+  max_day_per_week: z
+    .number()
+    .min(0, {
+      message: "Debe ser mayor un valor entre 0 y 7",
+    })
+    .max(7, {
+      message: "Debe ser mayor un valor entre 0 y 7",
+    }),
+  min_members_group_plan: z
+    .number()
+    .min(0, {
+      message: "Debe ser mayor un valor entre 0 y 10",
+    })
+    .max(10, {
+      message: "Debe ser mayor un valor entre 0 y 10",
+    }),
+  max_members_group_plan: z
+    .number()
+    .min(0, {
+      message: "Debe ser mayor un valor entre 0 y 10",
+    })
+    .max(10, {
+      message: "Debe ser mayor un valor entre 0 y 10",
+    }),
+  guest_days: z.array(
+    z.enum([
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+      "Domingo",
+      "Festivo",
+    ])
+  ),
+  start_time_restriction:z.string(),
+  end_time_restriction:z.string(),
+  restriction_days: z.array(
+    z.enum([
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+      "Domingo",
+      "Festivo",
+    ])
+  ),
+
   validacion_manual: z.boolean(),
 
   // Configuración Adicional
@@ -59,6 +121,7 @@ export const MembershipConfigSchema = z.object({
   permite_ingreso_todas_sedes: z.boolean(),
 
   // Configuración de Pagos
+  descuento_aplicable: z.number().min(0).max(50),
   metodos_pago: z.array(
     z.enum(["Efectivo", "Tarjeta de Crédito", "Transferencia", "PayPal"])
   ),
@@ -67,14 +130,7 @@ export const MembershipConfigSchema = z.object({
   recordatorios: z.boolean(),
   codigo_puc: z.string(),
   centro_costo: z.enum(["classes", "personal"]),
-  max_entry_per_day: z
-    .number()
-    .min(1, {
-      message: "Debe ser mayor a 0",
-    })
-    .max(10, {
-      message: "Debe ser menor a 11",
-    }),
+
   percentage_discount: z
     .number()
     .min(0, {
@@ -83,22 +139,34 @@ export const MembershipConfigSchema = z.object({
     .max(50, {
       message: "Debe ser 50 o menor",
     }),
+  age_restriction_type: z.enum(["major", "minor"]),
+  age_restriction_value: z.number(),
+  type_payment: z.enum(["monthly", "fortnightly", "weekly"]),
 });
 
 export function SettingMemberShip() {
   const form = useForm<z.infer<typeof MembershipConfigSchema>>({
     resolver: zodResolver(MembershipConfigSchema),
     defaultValues: {
-      generar_pago: false,
-      generar_fecha_vcto: false,
-      generar_factura: false,
-      generar_codigo_cliente: false,
-      generar_movimiento_fecha_vcto: false,
-      entradas_maximas_dia: 3,
+      generate_payment: false,
+      generate_expiration_date: false,
+      generate_bill: false,
+      generate_code_customer: false,
+      generate_movement_exp_date: false,
       descuento_aplicable: 0,
-      dias_semana: ["L", "M", "X", "J", "V"],
-      horario_desde: "06:00",
-      horario_hasta: "22:00",
+      controlled_plan: false,
+      required_list_members: false,
+      can_be_invited: false,
+      required_footprint: false,
+      has_assessment_physical_therapy: false,
+      required_gift_voucher: false,
+      admission_all_sites: false,
+      controls_user_access: false,
+      guest_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+      start_time_restriction: "06:00",
+      end_time_restriction: "22:00",
+      restriction_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+      age_restriction_value:0,
       validacion_manual: false,
       dcto_cumple: false,
       obsequio_dcto: false,
@@ -112,6 +180,7 @@ export function SettingMemberShip() {
       captar_abonos: false,
       genera_cxc: false,
       permite_ingreso_todas_sedes: false,
+      charge_registration: false,
       metodos_pago: [],
       pagos_parciales: false,
       auto_renovacion: false,
@@ -119,9 +188,21 @@ export function SettingMemberShip() {
       codigo_puc: "",
       centro_costo: "classes",
       max_entry_per_day: 1,
+      max_day_per_week: 0,
       percentage_discount: 0,
     },
   });
+
+  const dias = [
+    { label: "Lun" as const, nombre: "Lunes" as const },
+    { label: "Mar" as const, nombre: "Martes" as const },
+    { label: "Mie" as const, nombre: "Miércoles" as const },
+    { label: "Jue" as const, nombre: "Jueves" as const },
+    { label: "Vie" as const, nombre: "Viernes" as const },
+    { label: "Sab" as const, nombre: "Sabado" as const },
+    { label: "Dom" as const, nombre: "Domingo" as const },
+    { label: "Fes" as const, nombre: "Festivo" as const },
+  ];
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
     console.log({ data });
@@ -140,7 +221,7 @@ export function SettingMemberShip() {
             <div>
               <FormField
                 control={form.control}
-                name="generar_pago"
+                name="generate_payment"
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                     <div>
@@ -163,7 +244,7 @@ export function SettingMemberShip() {
             <div>
               <FormField
                 control={form.control}
-                name="generar_fecha_vcto"
+                name="generate_movement_exp_date"
                 render={({ field }) => (
                   <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                     <div>
@@ -185,7 +266,7 @@ export function SettingMemberShip() {
             </div>
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="generate_bill"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -206,7 +287,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="generate_code_customer"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -227,7 +308,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="controlled_plan"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -245,7 +326,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="required_list_members"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -267,7 +348,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="can_be_invited"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -289,7 +370,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="required_footprint"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -310,7 +391,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="has_assessment_physical_therapy"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -331,7 +412,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="required_gift_voucher"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -352,7 +433,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="admission_all_sites"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -370,7 +451,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="charge_registration"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -388,7 +469,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="generar_fecha_vcto"
+              name="controls_user_access"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -407,46 +488,13 @@ export function SettingMemberShip() {
               )}
             />
             <div />
-
-            <FormField
-              control={form.control}
-              name="percentage_discount"
-              render={({ field }) => (
-                <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5">
-                  <FormLabel>Descuento Aplicable (%)</FormLabel>
-
-                  <div className="flex items-center justify-betwee">
-                    <FormControl>
-                      <div className="px-4 py-1 rounded-xl  w-full">
-                        <Slider
-                          defaultValue={[field.value]}
-                          max={50}
-                          min={0}
-                          step={1}
-                          onValueChange={field.onChange}
-                          className="w-full"
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-2">
-                          <span>0%</span>
-                          <span className="text-emerald-400 font-medium">
-                            {field.value > 0 ? `${field.value}%` : "Sin"}{" "}
-                            descuento
-                          </span>
-                          <span>50%</span>
-                        </div>
-                      </div>
-                    </FormControl>
-                  </div>
-                </FormItem>
-              )}
-            />
           </div>
         </CustomCard>
 
         {/* Control de Acceso */}
         <CustomCard title="Control de Acceso" Icon={Clock}>
           <div className="space-y-6">
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-between gap-6">
               <FormField
                 control={form.control}
                 name="max_entry_per_day"
@@ -480,7 +528,7 @@ export function SettingMemberShip() {
               />
               <FormField
                 control={form.control}
-                name="max_entry_per_day"
+                name="max_day_per_week"
                 render={({ field }) => (
                   <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
                     <FormLabel>
@@ -512,70 +560,80 @@ export function SettingMemberShip() {
                 )}
               />
             </div>
+            <div className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
+              <FormLabel>
+                Si es plan Grupal, controla Minimo y Máximo N° de integrantes.
+              </FormLabel>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                <FormField
+                  control={form.control}
+                  name="min_members_group_plan"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <div>
+                        <FormControl>
+                          <div>
+                            <FormLabel className="text-xs text-gray-400">
+                              Minimo
+                            </FormLabel>
+                            <Input
+                              type="number"
+                              defaultValue="0"
+                              className="bg-white/10 border-white/20 text-white mt-1"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="max_members_group_plan"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <div>
+                        <FormControl>
+                          <div>
+                            <FormLabel className="text-xs text-gray-400">
+                              Maximo
+                            </FormLabel>
+                            <Input
+                              type="number"
+                              defaultValue="0"
+                              className="bg-white/10 border-white/20 text-white mt-1"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
             <FormField
               control={form.control}
-              name="max_entry_per_day"
-              render={({ field }) => (
-                <FormItem className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
-                  <FormLabel>
-                    Si es plan Grupal, controla Minimo y Máximo N° de
-                    integrantes.
-                  </FormLabel>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <Label className="text-xs text-gray-400">Minimo</Label>
-                      <Input
-                        type="number"
-                        defaultValue="0"
-                        className="bg-white/10 border-white/20 text-white mt-1"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-xs text-gray-400">Maximo</Label>
-                      <Input
-                        type="number"
-                        defaultValue="0"
-                        className="bg-white/10 border-white/20 text-white mt-1"
-                      />
-                    </div>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="dias_semana"
+              name="guest_days"
               render={({ field }) => {
-                const dias = [
-                  { label: "L" as const, nombre: "Lunes" },
-                  { label: "M" as const, nombre: "Martes" },
-                  { label: "X" as const, nombre: "Miércoles" },
-                  { label: "J" as const, nombre: "Jueves" },
-                  { label: "V" as const, nombre: "Viernes" },
-                  { label: "S" as const, nombre: "Sábado" },
-                  { label: "D" as const, nombre: "Domingo" },
-                  { label: "F" as const, nombre: "Festivos" },
-                ];
                 // Adaptar el valor para incluir festivos si está presente
                 const value = (field.value || []) as (
-                  | "L"
-                  | "M"
-                  | "X"
-                  | "J"
-                  | "V"
-                  | "S"
-                  | "D"
-                  | "F"
+                  | "Lunes"
+                  | "Martes"
+                  | "Miércoles"
+                  | "Jueves"
+                  | "Viernes"
+                  | "Sabado"
+                  | "Domingo"
+                  | "Festivo"
                 )[];
                 return (
                   <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
-                    <FormLabel className="text-white font-medium mb-3 block">
-                      Invitado los Días
-                    </FormLabel>
+                    <FormLabel>Invitado los Días</FormLabel>
                     <div className="grid grid-cols-8 gap-2">
                       {dias.map((dia) => {
-                        const checked = value.includes(dia.label);
+                        const checked = value.includes(dia.nombre);
                         return (
                           <div key={dia.label} className="text-center">
                             <button
@@ -589,27 +647,27 @@ export function SettingMemberShip() {
                               onClick={() => {
                                 if (checked) {
                                   field.onChange(
-                                    value.filter((v) => v !== dia.label) as (
-                                      | "L"
-                                      | "M"
-                                      | "X"
-                                      | "J"
-                                      | "V"
-                                      | "S"
-                                      | "D"
-                                      | "F"
+                                    value.filter((v) => v !== dia.nombre) as (
+                                      | "Lunes"
+                                      | "Martes"
+                                      | "Miércoles"
+                                      | "Jueves"
+                                      | "Viernes"
+                                      | "Sabado"
+                                      | "Domingo"
+                                      | "Festivo"
                                     )[]
                                   );
                                 } else {
-                                  field.onChange([...value, dia.label] as (
-                                    | "L"
-                                    | "M"
-                                    | "X"
-                                    | "J"
-                                    | "V"
-                                    | "S"
-                                    | "D"
-                                    | "F"
+                                  field.onChange([...value, dia.nombre] as (
+                                    | "Lunes"
+                                    | "Martes"
+                                    | "Miércoles"
+                                    | "Jueves"
+                                    | "Viernes"
+                                    | "Sabado"
+                                    | "Domingo"
+                                    | "Festivo"
                                   )[]);
                                 }
                               }}
@@ -628,60 +686,84 @@ export function SettingMemberShip() {
                 );
               }}
             />
-            <div className="space-y-3">
-              <Label className="text-white font-medium">
-                Restricción de horario
-              </Label>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label className="text-xs text-gray-400">Desde</Label>
-                  <Input
-                    type="time"
-                    defaultValue="06:00"
-                    className="bg-white/10 border-white/20 text-white mt-1"
+            <div className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
+              <div className="space-y-3">
+                <FormLabel>Restricción de horario</FormLabel>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                  <FormField
+                    control={form.control}
+                    name="start_time_restriction"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <div>
+                          <FormControl>
+                            <div>
+                              <FormLabel className="text-xs text-gray-400">
+                                Desde
+                              </FormLabel>
+                              <Input
+                                type="time"
+                                defaultValue="06:00"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                      </FormItem>
+                    )}
                   />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-400">Hasta</Label>
-                  <Input
-                    type="time"
-                    defaultValue="22:00"
-                    className="bg-white/10 border-white/20 text-white mt-1"
+                  <FormField
+                    control={form.control}
+                    name="end_time_restriction"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <div>
+                          <FormControl>
+                            <div>
+                              <FormLabel className="text-xs text-gray-400">
+                                Hasta
+                              </FormLabel>
+                              <Input
+                                type="time"
+                                defaultValue="06:00"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                      </FormItem>
+                    )}
                   />
+                  
+                  
                 </div>
               </div>
             </div>
             <FormField
               control={form.control}
-              name="dias_semana"
+              name="restriction_days"
               render={({ field }) => {
-                const dias = [
-                  { label: "L" as const, nombre: "Lunes" },
-                  { label: "M" as const, nombre: "Martes" },
-                  { label: "X" as const, nombre: "Miércoles" },
-                  { label: "J" as const, nombre: "Jueves" },
-                  { label: "V" as const, nombre: "Viernes" },
-                  { label: "S" as const, nombre: "Sábado" },
-                  { label: "D" as const, nombre: "Domingo" },
-                ];
+                
                 // Adaptar el valor para incluir festivos si está presente
                 const value = (field.value || []) as (
-                  | "L"
-                  | "M"
-                  | "X"
-                  | "J"
-                  | "V"
-                  | "S"
-                  | "D"
+                  | "Lunes"
+                  | "Martes"
+                  | "Miércoles"
+                  | "Jueves"
+                  | "Viernes"
+                  | "Sabado"
+                  | "Domingo"
+                  | "Festivo"
                 )[];
                 return (
                   <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
-                    <FormLabel className="text-white font-medium mb-3 block">
-                      Restriccion de Dias
-                    </FormLabel>
-                    <div className="grid grid-cols-7 gap-2">
+                    <FormLabel>Restricción los Dias</FormLabel>
+                    <div className="grid grid-cols-8 gap-2">
                       {dias.map((dia) => {
-                        const checked = value.includes(dia.label);
+                        const checked = value.includes(dia.nombre);
                         return (
                           <div key={dia.label} className="text-center">
                             <button
@@ -695,27 +777,27 @@ export function SettingMemberShip() {
                               onClick={() => {
                                 if (checked) {
                                   field.onChange(
-                                    value.filter((v) => v !== dia.label) as (
-                                      | "L"
-                                      | "M"
-                                      | "X"
-                                      | "J"
-                                      | "V"
-                                      | "S"
-                                      | "D"
-                                      | "F"
+                                    value.filter((v) => v !== dia.nombre) as (
+                                      | "Lunes"
+                                      | "Martes"
+                                      | "Miércoles"
+                                      | "Jueves"
+                                      | "Viernes"
+                                      | "Sabado"
+                                      | "Domingo"
+                                      | "Festivo"
                                     )[]
                                   );
                                 } else {
-                                  field.onChange([...value, dia.label] as (
-                                    | "L"
-                                    | "M"
-                                    | "X"
-                                    | "J"
-                                    | "V"
-                                    | "S"
-                                    | "D"
-                                    | "F"
+                                  field.onChange([...value, dia.nombre] as (
+                                    | "Lunes"
+                                    | "Martes"
+                                    | "Miércoles"
+                                    | "Jueves"
+                                    | "Viernes"
+                                    | "Sabado"
+                                    | "Domingo"
+                                    | "Festivo"
                                   )[]);
                                 }
                               }}
@@ -727,24 +809,69 @@ export function SettingMemberShip() {
                         );
                       })}
                     </div>
-                    {/* <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-gray-400 mt-2">
                       Selecciona los días en los que el invitado puede asistir
-                    </p> */}
+                    </p>
                   </FormItem>
                 );
               }}
             />
-
-            <div className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-              <div>
-                <Label className="text-white font-medium">
-                  Validación Manual
-                </Label>
-                <p className="text-xs text-gray-400 mt-1">
-                  Requiere aprobación del staff
-                </p>
-              </div>
-              <Switch className="data-[state=checked]:bg-blue-500" />
+            <div className="grid grid-cols-1 md:grid-cols-2  p-2 rounded-lg bg-white/5  gap-6 items-end">
+              <FormField
+                control={form.control}
+                name="age_restriction_type"
+                render={({ field }) => (
+                  <FormItem className="space-y-3">
+                    <FormLabel>Restriccion de edad</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col"
+                      >
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <RadioGroupItem value="all" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Mayor de
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center gap-3">
+                          <FormControl>
+                            <RadioGroupItem value="mentions" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Menor de
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="age_restriction_value"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormControl>
+                      <div>
+                        <FormLabel className="text-xs text-gray-400">
+                          Edad
+                        </FormLabel>
+                        <Input
+                          type="number"
+                          defaultValue="0"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
             </div>
           </div>
         </CustomCard>
@@ -860,24 +987,83 @@ export function SettingMemberShip() {
         {/* Configuración de Pagos*/}
         <CustomCard title="Configuración de Pagos" Icon={CreditCard}>
           <div className="grid grid-cols-3 gap-6">
-            <div className="space-y-3">
-              <Label className="text-white font-medium">Métodos de Pago</Label>
-              <div className="space-y-2">
-                {[
-                  "Efectivo",
-                  "Tarjeta de Crédito",
-                  "Transferencia",
-                  "PayPal",
-                ].map((method) => (
-                  <div
-                    key={method}
-                    className="flex items-center space-x-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                  >
-                    <Checkbox className="border-white/30" />
-                    <span className="text-white text-sm">{method}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="type_payment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Formas de pago</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="w-full">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccione..." />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="monthly">Mensual</SelectItem>
+                        <SelectItem value="fortnightly">Quincenal</SelectItem>
+                        <SelectItem value="weekly">Semanal</SelectItem>
+                      </SelectContent>
+                    </Select>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="max_entry_per_day"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex">
+                      <div className="w-full">
+                        <FormLabel>Valor del plan</FormLabel>
+                        <Input
+                          type="number"
+                          defaultValue="0"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                        />
+                      </div>
+                    </div>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="percentage_discount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Descuento Aplicable (%)</FormLabel>
+
+                    <div className="flex items-center justify-betwee">
+                      <FormControl>
+                        <div className="px-4 py-1 rounded-xl  w-full">
+                          <Slider
+                            defaultValue={[field.value]}
+                            max={50}
+                            min={0}
+                            step={1}
+                            onValueChange={field.onChange}
+                            className="w-full"
+                          />
+                          <div className="flex justify-between text-xs text-gray-400 mt-2">
+                            <span>0%</span>
+                            <span className="text-emerald-400 font-medium">
+                              {field.value > 0 ? `${field.value}%` : "Sin"}{" "}
+                              descuento
+                            </span>
+                            <span>50%</span>
+                          </div>
+                        </div>
+                      </FormControl>
+                    </div>
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div className="space-y-3">
