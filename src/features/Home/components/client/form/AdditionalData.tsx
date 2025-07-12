@@ -135,18 +135,24 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                     render={({ field }) => (
                         <FormItem>
                             <Label>Pais:</Label>
-                            <FormControl>
-                                <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                    <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                        <SelectValue placeholder="Seleccionar" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {countries.map(item => (
-                                            <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
+                            {!countries.length ? (
+                                <FormControl>
+                                    <Input disabled={true} placeholder="Cargando..." />
+                                </FormControl>
+                            ) : (
+                                <FormControl>
+                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                            <SelectValue placeholder="Seleccionar" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {countries.map(item => (
+                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            )}
                             <FormMessage />
                         </FormItem>
                     )}
@@ -158,18 +164,24 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                     render={({ field }) => (
                         <FormItem>
                             <Label>Tipo de Sangre:</Label>
-                            <FormControl>
-                                <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                    <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                        <SelectValue placeholder="Seleccionar" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {bloods.map(item => (
-                                            <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
+                            {!bloods.length ? (
+                                <FormControl>
+                                    <Input disabled={true} placeholder="Cargando..." />
+                                </FormControl>
+                            ) : (
+                                <FormControl>
+                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                            <SelectValue placeholder="Seleccionar" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {bloods.map(item => (
+                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            )}
                             <FormMessage />
                         </FormItem>
                     )}
@@ -181,18 +193,24 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                     render={({ field }) => (
                         <FormItem>
                             <Label>Genero:</Label>
-                            <FormControl>
-                                <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                    <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                        <SelectValue placeholder="Seleccionar" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {genders.map(item => (
-                                            <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </FormControl>
+                            {!genders.length ? (
+                                <FormControl>
+                                    <Input disabled={true} placeholder="Cargando..." />
+                                </FormControl>
+                            ) : (
+                                <FormControl>
+                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                            <SelectValue placeholder="Seleccionar" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {genders.map(item => (
+                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </FormControl>
+                            )}
                             <FormMessage />
                         </FormItem>
                     )}

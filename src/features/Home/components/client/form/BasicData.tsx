@@ -100,18 +100,24 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <Label>Tipo de Documento:</Label>
-                                <FormControl>
-                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {documentsTypes.map(item => (
-                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
+                                {!documentsTypes.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Cargando..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                <SelectValue placeholder="Seleccionar" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {documentsTypes.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -165,18 +171,24 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <Label>Tipo de Persona:</Label>
-                                <FormControl>
-                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {personsTypes.map(item => (
-                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
+                                {!personsTypes.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Cargando..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                <SelectValue placeholder="Seleccionar" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {personsTypes.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
                                 <FormMessage />
                             </FormItem>
                         )}

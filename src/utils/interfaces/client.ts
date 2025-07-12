@@ -4,10 +4,11 @@ export interface Client {
     id: number;
     first_name: string;
     last_name: string;
-    is_leader: boolean;
+    is_leader: number;
     is_active: boolean;
     enrollment_date: string;
     document_type_id: number;
+    blood_type_id: number;
     identification: string;
     person_type_id?: number | null;
     tax_responsability_id?: number | null;
@@ -27,10 +28,10 @@ export interface Client {
     observations?: string | null;
     created_at: string;
     updated_at: string;
-    personType?: PersonType | null;
-    documentType?: DocumentType | null;
-    taxResponsability?: TaxResponsability | null;
+    person_type?: PersonType | null;
+    document_type?: DocumentType | null;
+    tax_responsability?: TaxResponsability | null;
     gender?: Gender | null;
     country?: Country | null;
-    howDidYouHear?: HowDidYouHear | null;
+    how_did_you_hear?: HowDidYouHear | null;
 }

@@ -89,18 +89,24 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <Label>Como nos Conocio?:</Label>
-                                <FormControl>
-                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {howDidYouHear.map(item => (
-                                                <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
+                                {!howDidYouHear.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Cargando..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                <SelectValue placeholder="Seleccionar" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {howDidYouHear.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -149,18 +155,24 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <Label>Responsabilidad Fiscal:</Label>
-                                <FormControl>
-                                    <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} defaultValue={field.value + ""}>
-                                        <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {taxResponsability.map(item => (
-                                                <SelectItem key={item.id} value={item.id + ''}>{item.code} - {item.name}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </FormControl>
+                                {!taxResponsability.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Cargando..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                <SelectValue placeholder="Seleccionar" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {taxResponsability.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>{item.code} - {item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
                                 <FormMessage />
                             </FormItem>
                         )}

@@ -29,8 +29,8 @@ export const clientSchema = z.object({
     contact_emergency: z.string().max(100).optional(),
     phone_emergency: z.string().max(20).optional(),
     date_of_birth: z.string().optional(),
-    place_of_birth: z.string().optional(),
-    blood_type_id: z.string().optional(),
+    place_of_birth: z.string().max(100).optional(),
+    blood_type_id: z.number().int().optional(),
     country_id: z.number().int().min(1).optional(),
     gender_id: z.number().int().min(1).optional(),
     eps: z.string().max(100).optional(),
@@ -71,7 +71,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 first_name: currentClient.first_name ?? "",
                 last_name: currentClient.last_name ?? "",
                 person_type_id: currentClient.person_type_id ?? undefined,
-                is_leader: currentClient.is_leader,
+                is_leader: currentClient.is_leader == 1 ? true : false,
                 email: currentClient.email ?? "",
                 phone: currentClient.phone ?? "",
                 address: currentClient.address ?? "",
@@ -79,6 +79,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 phone_emergency: currentClient.phone_emergency ?? "",
                 date_of_birth: currentClient.date_of_birth ?? "",
                 place_of_birth: currentClient.place_of_birth ?? "",
+                blood_type_id: currentClient.blood_type_id ?? undefined,
                 country_id: currentClient.country_id ?? undefined,
                 gender_id: currentClient.gender_id ?? undefined,
                 eps: currentClient.eps ?? "",
@@ -92,6 +93,27 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
             form.reset({
                 enrollment_date: format(new Date(), "yyyy-MM-dd"),
                 is_leader: false,
+                document_type_id: undefined,
+                identification: "",
+                first_name: "",
+                last_name: "",
+                person_type_id: undefined,
+                email: "",
+                phone: "",
+                address: "",
+                contact_emergency: "",
+                phone_emergency: "",
+                date_of_birth: "",
+                place_of_birth: "",
+                blood_type_id: undefined,
+                country_id: undefined,
+                gender_id: undefined,
+                eps: "",
+                tax_responsability_id: undefined,
+                profession: "",
+                how_did_you_hear_id: undefined,
+                expiration_date: "",
+                observations: "",
             });
         }
     }, [currentClient, form]);
@@ -99,7 +121,13 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
     const onSubmit = async (values: ClientFormValues) => {
         setIsSaving(true);
 
-        const response = await ClientService.store(values);
+        let response = null;
+
+        if (currentClient?.id) {
+            response = await ClientService.update(values, currentClient.id);
+        } else {
+            response = await ClientService.store(values);
+        }
 
         if (response.success) {
             setActionModule('dashboard');
