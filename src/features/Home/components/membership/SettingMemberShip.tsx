@@ -9,7 +9,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -104,8 +103,6 @@ export const MembershipConfigSchema = z.object({
     ])
   ),
 
-  
-
   // Configuración Adicional
   birthday_discount: z.boolean(),
   birthday_gift_discount: z.boolean(),
@@ -119,8 +116,11 @@ export const MembershipConfigSchema = z.object({
   capture_gift_voucher: z.boolean(),
   generate_cxc: z.boolean(),
 
-
   // Configuración de Pagos
+  type_payment: z.enum(["monthly", "fortnightly", "weekly"]),
+  cost_center: z.number(),
+  price_plan: z.number().positive(),
+
   descuento_aplicable: z.number().min(0).max(50),
   metodos_pago: z.array(
     z.enum(["Efectivo", "Tarjeta de Crédito", "Transferencia", "PayPal"])
@@ -129,7 +129,6 @@ export const MembershipConfigSchema = z.object({
   auto_renovacion: z.boolean(),
   recordatorios: z.boolean(),
   codigo_puc: z.string(),
-  centro_costo: z.enum(["classes", "personal"]),
 
   percentage_discount: z
     .number()
@@ -141,7 +140,6 @@ export const MembershipConfigSchema = z.object({
     }),
   age_restriction_type: z.enum(["major", "minor"]),
   age_restriction_value: z.number(),
-  type_payment: z.enum(["monthly", "fortnightly", "weekly"]),
 });
 
 export function SettingMemberShip() {
@@ -167,7 +165,7 @@ export function SettingMemberShip() {
       end_time_restriction: "22:00",
       restriction_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
       age_restriction_value: 0,
-    
+
       birthday_discount: false,
       birthday_gift_discount: false,
       discount_early_payment: false,
@@ -179,17 +177,13 @@ export function SettingMemberShip() {
       issues_card: false,
       capture_gift_voucher: false,
       generate_cxc: false,
-      
+
       charge_registration: false,
-      metodos_pago: [],
-      pagos_parciales: false,
-      auto_renovacion: false,
-      recordatorios: false,
-      codigo_puc: "",
-      centro_costo: "classes",
+      price_plan: 1,
+    
+      percentage_discount: 0,
       max_entry_per_day: 1,
       max_day_per_week: 0,
-      percentage_discount: 0,
     },
   });
 
@@ -629,7 +623,7 @@ export function SettingMemberShip() {
                   | "Festivo"
                 )[];
                 return (
-                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
+                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
                     <FormLabel>Invitado los Días</FormLabel>
                     <div className="grid grid-cols-8 gap-2">
                       {dias.map((dia) => {
@@ -756,7 +750,7 @@ export function SettingMemberShip() {
                   | "Festivo"
                 )[];
                 return (
-                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/20">
+                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
                     <FormLabel>Restricción los Dias</FormLabel>
                     <div className="grid grid-cols-8 gap-2">
                       {dias.map((dia) => {
@@ -1121,7 +1115,7 @@ export function SettingMemberShip() {
               />
               <FormField
                 control={form.control}
-                name="max_entry_per_day"
+                name="price_plan"
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex">
@@ -1173,7 +1167,7 @@ export function SettingMemberShip() {
             </div>
 
             <div className="space-y-3">
-              <Label className="text-white font-medium">
+              {/* <Label className="text-white font-medium">
                 Configuración Avanzada
               </Label>
               <div className="space-y-4">
@@ -1189,37 +1183,47 @@ export function SettingMemberShip() {
                   <span className="text-white text-sm">Recordatorios</span>
                   <Switch className="data-[state=checked]:bg-purple-500" />
                 </div>
-              </div>
+              </div> */}
             </div>
 
             <div className="space-y-3">
-              <Label className="text-white font-medium">
+              {/*  <Label className="text-white font-medium">
                 Integración Contable
-              </Label>
+              </Label> */}
               <div className="space-y-3">
-                <div>
+                {/*  <div>
                   <Label className="text-xs text-gray-400">Código P.U.C.</Label>
                   <Input
                     placeholder="01-MENSUALIDAD"
                     className="bg-white/10 border-white/20 text-white mt-1"
                   />
-                </div>
-                <div>
-                  <Label className="text-xs text-gray-400">
-                    Centro de Costo
-                  </Label>
-                  <Select>
-                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
-                      <SelectValue placeholder="Seleccionar" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="classes">Clases Grupales</SelectItem>
-                      <SelectItem value="personal">
-                        Entrenamiento Personal
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                </div> */}
+                <FormField
+                  control={form.control}
+                  name="cost_center"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Centro de costo</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value?.toString()}
+                      >
+                        <FormControl className="w-full">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleccione..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">Centro C 1</SelectItem>
+                          <SelectItem value="2">Centro C 2</SelectItem>
+                          <SelectItem value="3">Centro C 3</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           </div>
