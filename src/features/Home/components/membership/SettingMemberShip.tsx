@@ -26,132 +26,205 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomCard } from "@/components/ui/customCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-export const MembershipConfigSchema = z.object({
-  // Configuración Principal
-  generate_payment: z.boolean(),
-  generate_expiration_date: z.boolean(),
-  generate_bill: z.boolean(),
-  generate_code_customer: z.boolean(),
-  generate_movement_exp_date: z.boolean(),
-  controlled_plan: z.boolean(),
-  required_list_members: z.boolean(),
-  can_be_invited: z.boolean(),
-  required_footprint: z.boolean(),
-  has_assessment_physical_therapy: z.boolean(),
-  required_gift_voucher: z.boolean(),
-  admission_all_sites: z.boolean(),
-  charge_registration: z.boolean(),
-  controls_user_access: z.boolean(),
+export const MembershipConfigSchema = z
+  .object({
+    // Configuración Principal
+    name: z.string({'error':'Ingrese un Nombre para el plan'}),
+    description: z.string().optional(),
+    generate_payment: z.boolean(),
+    generate_bill: z.boolean(),
+    generate_code_customer: z.boolean(),
+    generate_movement_exp_date: z.boolean(),
+    controlled_plan: z.boolean(),
+    required_list_members: z.boolean(),
+    can_be_invited: z.boolean(),
+    required_footprint: z.boolean(),
+    has_assessment_physical_therapy: z.boolean(),
+    required_gift_voucher: z.boolean(),
+    admission_all_sites: z.boolean(),
+    charge_registration: z.boolean(),
+    controls_user_access: z.boolean(),
 
-  // Control de Acceso
-  max_entry_per_day: z
-    .number()
-    .min(1, {
-      message: "Debe ser mayor a 0",
-    })
-    .max(10, {
-      message: "Debe ser menor a 11",
-    }),
-  max_day_per_week: z
-    .number()
-    .min(0, {
-      message: "Debe ser mayor un valor entre 0 y 7",
-    })
-    .max(7, {
-      message: "Debe ser mayor un valor entre 0 y 7",
-    }),
-  min_members_group_plan: z
-    .number()
-    .min(0, {
-      message: "Debe ser mayor un valor entre 0 y 10",
-    })
-    .max(10, {
-      message: "Debe ser mayor un valor entre 0 y 10",
-    }),
-  max_members_group_plan: z
-    .number()
-    .min(0, {
-      message: "Debe ser mayor un valor entre 0 y 10",
-    })
-    .max(10, {
-      message: "Debe ser mayor un valor entre 0 y 10",
-    }),
-  guest_days: z.array(
-    z.enum([
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-      "Domingo",
-      "Festivo",
-    ])
-  ),
-  start_time_restriction: z.string(),
-  end_time_restriction: z.string(),
-  restriction_days: z.array(
-    z.enum([
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sabado",
-      "Domingo",
-      "Festivo",
-    ])
-  ),
+    // Control de Acceso
+    max_entry_per_day: z
+      .number()
+      .min(1, {
+        message: "Debe ser mayor a 0",
+      })
+      .max(10, {
+        message: "Debe ser menor a 11",
+      }),
+    max_day_per_week: z
+      .number()
+      .min(0, {
+        message: "Debe ser mayor un valor entre 0 y 7",
+      })
+      .max(7, {
+        message: "Debe ser mayor un valor entre 0 y 7",
+      }),
+    min_members_group_plan: z
+      .number()
+      .min(0, {
+        message: "Debe ser mayor un valor entre 0 y 10",
+      })
+      .max(10, {
+        message: "Debe ser mayor un valor entre 0 y 10",
+      })
+      .optional(),
+    max_members_group_plan: z
+      .number()
+      .min(0, {
+        message: "Debe ser mayor un valor entre 0 y 10",
+      })
+      .max(10, {
+        message: "Debe ser mayor un valor entre 0 y 10",
+      })
+      .optional(),
+    guest_days: z.array(
+      z.enum([
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+        "Holiday",
+      ])
+    ),
+    start_time_restriction: z.string().optional(),
+    end_time_restriction: z.string().optional(),
+    restriction_days: z.array(
+      z.enum([
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+        "Holiday",
+      ])
+    ),
 
-  // Configuración Adicional
-  birthday_discount: z.boolean(),
-  birthday_gift_discount: z.boolean(),
-  discount_early_payment: z.boolean(),
-  discount_early_payment_first: z.boolean(),
-  increase_arrears: z.boolean(),
-  generate_payment_plan: z.boolean(),
-  start_first_day_month: z.boolean(),
-  contains_class_package: z.boolean(),
-  issues_card: z.boolean(),
-  capture_gift_voucher: z.boolean(),
-  generate_cxc: z.boolean(),
+    // Configuración Adicional
+    birthday_discount: z.boolean(),
+    birthday_choose_gift_discount: z.boolean(),
+    discount_early_payment: z.boolean(),
+    discount_early_payment_first: z.boolean(),
+    increase_arrears: z.boolean(),
+    generate_payment_plan: z.boolean(),
+    start_first_day_month: z.boolean(),
+    contains_class_package: z.boolean(),
+    issues_card: z.boolean(),
+    capture_gift_voucher: z.boolean(),
+    generate_cxc: z.boolean(),
 
-  // Configuración de Pagos
-  type_payment: z.enum(["monthly", "fortnightly", "weekly"]),
-  cost_center: z.number(),
-  price_plan: z.number().positive(),
+    // Configuración de Pagos
+    type_payment: z.number({
+      error: "Seleccione una forma de pago",
+    }),
+    cost_center: z.number("Seleccione un Centro de costo"),
+    price_plan: z
+      .number()
+      .min(1, { error: "Ingrese Un valor para el plan" })
+      .positive(),
 
-  descuento_aplicable: z.number().min(0).max(50),
-  metodos_pago: z.array(
+    /* metodos_pago: z.array(
     z.enum(["Efectivo", "Tarjeta de Crédito", "Transferencia", "PayPal"])
-  ),
-  pagos_parciales: z.boolean(),
-  auto_renovacion: z.boolean(),
-  recordatorios: z.boolean(),
-  codigo_puc: z.string(),
+  ), */
 
-  percentage_discount: z
-    .number()
-    .min(0, {
-      message: "Debe ser 0 o mayor",
-    })
-    .max(50, {
-      message: "Debe ser 50 o menor",
-    }),
-  age_restriction_type: z.enum(["major", "minor"]),
-  age_restriction_value: z.number(),
-});
+    percentage_discount: z
+      .number()
+      .min(0, {
+        message: "Debe ser 0 o mayor",
+      })
+      .max(50, {
+        message: "Debe ser 50 o menor",
+      }),
+    age_restriction_type: z.enum(["major", "minor"]).optional(),
+    age_restriction_value: z.number().optional(),
+  })
+  .refine(
+    (data) =>
+      // Restriction Age Rule
+      (!data.age_restriction_type &&
+        (!data.age_restriction_value || data.age_restriction_value === 0)) ||
+      (data.age_restriction_type &&
+        data.age_restriction_value &&
+        data.age_restriction_value > 0),
+    {
+      message:
+        "Si seleccionas tipo de restricción de edad o valor de edad, ambos campos son obligatorios y la edad debe ser mayor a 0.",
+      path: ["age_restriction_type"], // poner ambos campos si se quiere mostrar el error en ambos
+    }
+  )
+  .refine(
+    (data) =>
+      // Si ambos son 0 o vacíos, está bien. Si uno es mayor a 0, el otro también debe ser mayor a 0.
+      ((data.min_members_group_plan ?? 0) === 0 &&
+        (data.max_members_group_plan ?? 0) === 0) ||
+      ((data.min_members_group_plan ?? 0) > 0 &&
+        (data.max_members_group_plan ?? 0) > 0),
+    {
+      message:
+        "Si uno de los campos de integrantes mínimos o máximos es mayor a 0, el otro también debe ser mayor a 0.",
+      path: ["min_members_group_plan"], // Puedes poner ambos campos si quieres mostrar el error en ambos
+    }
+  )
+  .refine(
+    (data) => {
+      if (
+        (data.min_members_group_plan ?? 0) > 0 &&
+        (data.max_members_group_plan ?? 0) > 0
+      ) {
+        return (
+          (data.max_members_group_plan ?? 0) >=
+          (data.min_members_group_plan ?? 0)
+        );
+      }
+      return true;
+    },
+    {
+      message: "El máximo de integrantes no puede ser menor que el mínimo.",
+      path: ["max_members_group_plan"],
+    }
+  )
+  .refine(
+    (data) =>
+      // Ambos vacíos o ambos con valor
+      (!data.start_time_restriction && !data.end_time_restriction) ||
+      (data.start_time_restriction && data.end_time_restriction),
+    {
+      message:
+        "Si seleccionas una hora de inicio o fin, ambos campos son obligatorios.",
+      path: ["start_time_restriction"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.start_time_restriction && data.end_time_restriction) {
+        // Compara los valores como strings "HH:mm"
+        return data.end_time_restriction > data.start_time_restriction;
+      }
+      return true;
+    },
+    {
+      message: "La hora de fin debe ser mayor a la hora de inicio.",
+      path: ["end_time_restriction"],
+    }
+  );
+
+type FormValues = z.infer<typeof MembershipConfigSchema>;
 
 export function SettingMemberShip() {
-  const form = useForm<z.infer<typeof MembershipConfigSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(MembershipConfigSchema),
     defaultValues: {
       generate_payment: false,
-      generate_expiration_date: false,
       generate_bill: false,
       generate_code_customer: false,
       generate_movement_exp_date: false,
-      descuento_aplicable: 0,
       controlled_plan: false,
       required_list_members: false,
       can_be_invited: false,
@@ -160,14 +233,14 @@ export function SettingMemberShip() {
       required_gift_voucher: false,
       admission_all_sites: false,
       controls_user_access: false,
-      guest_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
-      start_time_restriction: "06:00",
-      end_time_restriction: "22:00",
-      restriction_days: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"],
+      guest_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      /* start_time_restriction: "06:00",
+      end_time_restriction: "22:00", */
+      restriction_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       age_restriction_value: 0,
 
       birthday_discount: false,
-      birthday_gift_discount: false,
+      birthday_choose_gift_discount: false,
       discount_early_payment: false,
       discount_early_payment_first: false,
       increase_arrears: false,
@@ -179,23 +252,25 @@ export function SettingMemberShip() {
       generate_cxc: false,
 
       charge_registration: false,
-      price_plan: 1,
-    
+      price_plan: 0,
+
       percentage_discount: 0,
       max_entry_per_day: 1,
       max_day_per_week: 0,
+
+  
     },
   });
 
-  const dias = [
-    { label: "Lun" as const, nombre: "Lunes" as const },
-    { label: "Mar" as const, nombre: "Martes" as const },
-    { label: "Mie" as const, nombre: "Miércoles" as const },
-    { label: "Jue" as const, nombre: "Jueves" as const },
-    { label: "Vie" as const, nombre: "Viernes" as const },
-    { label: "Sab" as const, nombre: "Sabado" as const },
-    { label: "Dom" as const, nombre: "Domingo" as const },
-    { label: "Fes" as const, nombre: "Festivo" as const },
+  const days: { label: string; value: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday" | "Holiday"; tooltip: string }[] = [
+    { label: "Lun", value: "Monday", tooltip: "Lunes" },
+    { label: "Mar", value: "Tuesday", tooltip: "Martes" },
+    { label: "Mie", value: "Wednesday", tooltip: "Miércoles" },
+    { label: "Jue", value: "Thursday", tooltip: "Jueves" },
+    { label: "Vie", value: "Friday", tooltip: "Viernes" },
+    { label: "Sab", value: "Saturday", tooltip: "Sábado" },
+    { label: "Dom", value: "Sunday", tooltip: "Domingo" },
+    { label: "Fes", value: "Holiday", tooltip: "Festivo" },
   ];
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
@@ -212,6 +287,48 @@ export function SettingMemberShip() {
         {/* main Config */}
         <CustomCard title="Configuración Principal" Icon={Settings}>
           <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
+                  <div className="w-full">
+                    <FormControl>
+                      <div>
+                        <FormLabel className="">Nombre del plan</FormLabel>
+                        <Input
+                          type="string"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
+                  <div className="w-full">
+                    <FormControl>
+                      <div>
+                        <FormLabel>Descripción del plan</FormLabel>
+                        <Input
+                          type="string"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <div>
               <FormField
                 control={form.control}
@@ -541,7 +658,7 @@ export function SettingMemberShip() {
                             className="w-full"
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
-                            <span>1</span>
+                            <span>0</span>
                             <span className="text-emerald-400 font-medium">
                               {field.value} Dia (s)
                             </span>
@@ -575,10 +692,14 @@ export function SettingMemberShip() {
                               defaultValue="0"
                               className="bg-white/10 border-white/20 text-white mt-1"
                               {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
                             />
                           </div>
                         </FormControl>
                       </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -598,10 +719,14 @@ export function SettingMemberShip() {
                               defaultValue="0"
                               className="bg-white/10 border-white/20 text-white mt-1"
                               {...field}
+                              onChange={(e) =>
+                                field.onChange(Number(e.target.value))
+                              }
                             />
                           </div>
                         </FormControl>
                       </div>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -613,23 +738,23 @@ export function SettingMemberShip() {
               render={({ field }) => {
                 // Adaptar el valor para incluir festivos si está presente
                 const value = (field.value || []) as (
-                  | "Lunes"
-                  | "Martes"
-                  | "Miércoles"
-                  | "Jueves"
-                  | "Viernes"
-                  | "Sabado"
-                  | "Domingo"
-                  | "Festivo"
+                  | "Monday"
+                  | "Tuesday"
+                  | "Wednesday"
+                  | "Thursday"
+                  | "Friday"
+                  | "Saturday"
+                  | "Sunday"
+                  | "Holiday"
                 )[];
                 return (
                   <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
                     <FormLabel>Invitado los Días</FormLabel>
                     <div className="grid grid-cols-8 gap-2">
-                      {dias.map((dia) => {
-                        const checked = value.includes(dia.nombre);
+                      {days.map((day) => {
+                        const checked = value.includes(day.value);
                         return (
-                          <div key={dia.label} className="text-center">
+                          <div key={day.label} className="text-center">
                             <button
                               type="button"
                               className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
@@ -641,33 +766,33 @@ export function SettingMemberShip() {
                               onClick={() => {
                                 if (checked) {
                                   field.onChange(
-                                    value.filter((v) => v !== dia.nombre) as (
-                                      | "Lunes"
-                                      | "Martes"
-                                      | "Miércoles"
-                                      | "Jueves"
-                                      | "Viernes"
-                                      | "Sabado"
-                                      | "Domingo"
-                                      | "Festivo"
+                                    value.filter((v) => v !== day.value) as (
+                                      | "Monday"
+                                      | "Tuesday"
+                                      | "Wednesday"
+                                      | "Thursday"
+                                      | "Friday"
+                                      | "Saturday"
+                                      | "Sunday"
+                                      | "Holiday"
                                     )[]
                                   );
                                 } else {
-                                  field.onChange([...value, dia.nombre] as (
-                                    | "Lunes"
-                                    | "Martes"
-                                    | "Miércoles"
-                                    | "Jueves"
-                                    | "Viernes"
-                                    | "Sabado"
-                                    | "Domingo"
-                                    | "Festivo"
+                                  field.onChange([...value, day.value] as (
+                                    | "Monday"
+                                    | "Tuesday"
+                                    | "Wednesday"
+                                    | "Thursday"
+                                    | "Friday"
+                                    | "Saturday"
+                                    | "Sunday"
+                                    | "Holiday"
                                   )[]);
                                 }
                               }}
-                              title={dia.nombre}
+                              title={day.tooltip}
                             >
-                              {dia.label}
+                              {day.label}
                             </button>
                           </div>
                         );
@@ -698,13 +823,13 @@ export function SettingMemberShip() {
                               </FormLabel>
                               <Input
                                 type="time"
-                                defaultValue="06:00"
                                 className="bg-white/10 border-white/20 text-white mt-1"
                                 {...field}
                               />
                             </div>
                           </FormControl>
                         </div>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -721,13 +846,13 @@ export function SettingMemberShip() {
                               </FormLabel>
                               <Input
                                 type="time"
-                                defaultValue="06:00"
                                 className="bg-white/10 border-white/20 text-white mt-1"
                                 {...field}
                               />
                             </div>
                           </FormControl>
                         </div>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -740,23 +865,23 @@ export function SettingMemberShip() {
               render={({ field }) => {
                 // Adaptar el valor para incluir festivos si está presente
                 const value = (field.value || []) as (
-                  | "Lunes"
-                  | "Martes"
-                  | "Miércoles"
-                  | "Jueves"
-                  | "Viernes"
-                  | "Sabado"
-                  | "Domingo"
-                  | "Festivo"
+                  | "Monday"
+                  | "Tuesday"
+                  | "Wednesday"
+                  | "Thursday"
+                  | "Friday"
+                  | "Saturday"
+                  | "Sunday"
+                  | "Holiday"
                 )[];
                 return (
                   <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
                     <FormLabel>Restricción los Dias</FormLabel>
                     <div className="grid grid-cols-8 gap-2">
-                      {dias.map((dia) => {
-                        const checked = value.includes(dia.nombre);
+                      {days.map((day) => {
+                        const checked = value.includes(day.value);
                         return (
-                          <div key={dia.label} className="text-center">
+                          <div key={day.label} className="text-center">
                             <button
                               type="button"
                               className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
@@ -768,40 +893,40 @@ export function SettingMemberShip() {
                               onClick={() => {
                                 if (checked) {
                                   field.onChange(
-                                    value.filter((v) => v !== dia.nombre) as (
-                                      | "Lunes"
-                                      | "Martes"
-                                      | "Miércoles"
-                                      | "Jueves"
-                                      | "Viernes"
-                                      | "Sabado"
-                                      | "Domingo"
-                                      | "Festivo"
+                                    value.filter((v) => v !== day.value) as (
+                                      | "Monday"
+                                      | "Tuesday"
+                                      | "Wednesday"
+                                      | "Thursday"
+                                      | "Friday"
+                                      | "Saturday"
+                                      | "Sunday"
+                                      | "Holiday"
                                     )[]
                                   );
                                 } else {
-                                  field.onChange([...value, dia.nombre] as (
-                                    | "Lunes"
-                                    | "Martes"
-                                    | "Miércoles"
-                                    | "Jueves"
-                                    | "Viernes"
-                                    | "Sabado"
-                                    | "Domingo"
-                                    | "Festivo"
+                                  field.onChange([...value, day.value] as (
+                                    | "Monday"
+                                    | "Tuesday"
+                                    | "Wednesday"
+                                    | "Thursday"
+                                    | "Friday"
+                                    | "Saturday"
+                                    | "Sunday"
+                                    | "Holiday"
                                   )[]);
                                 }
                               }}
-                              title={dia.nombre}
+                              title={day.tooltip}
                             >
-                              {dia.label}
+                              {day.label}
                             </button>
                           </div>
                         );
                       })}
                     </div>
                     <p className="text-xs text-gray-400 mt-2">
-                      Selecciona los días en los que el invitado puede asistir
+                      Selecciona los días en los que el plan tiene restricción
                     </p>
                   </FormItem>
                 );
@@ -822,7 +947,7 @@ export function SettingMemberShip() {
                       >
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
-                            <RadioGroupItem value="all" />
+                            <RadioGroupItem value="major" />
                           </FormControl>
                           <FormLabel className="font-normal">
                             Mayor de
@@ -830,7 +955,7 @@ export function SettingMemberShip() {
                         </FormItem>
                         <FormItem className="flex items-center gap-3">
                           <FormControl>
-                            <RadioGroupItem value="mentions" />
+                            <RadioGroupItem value="minor" />
                           </FormControl>
                           <FormLabel className="font-normal">
                             Menor de
@@ -893,7 +1018,7 @@ export function SettingMemberShip() {
             />
             <FormField
               control={form.control}
-              name="birthday_gift_discount"
+              name="birthday_choose_gift_discount"
               render={({ field }) => (
                 <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                   <div>
@@ -1094,8 +1219,10 @@ export function SettingMemberShip() {
                   <FormItem>
                     <FormLabel>Formas de pago</FormLabel>
                     <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
+                     onValueChange={(value) => field.onChange(Number(value))}
+                     defaultValue={
+                       field.value ? String(field.value) : undefined
+                     }
                     >
                       <FormControl className="w-full">
                         <SelectTrigger>
@@ -1103,9 +1230,9 @@ export function SettingMemberShip() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="monthly">Mensual</SelectItem>
-                        <SelectItem value="fortnightly">Quincenal</SelectItem>
-                        <SelectItem value="weekly">Semanal</SelectItem>
+                        <SelectItem value="1">Mensual</SelectItem>
+                        <SelectItem value="2">Quincenal</SelectItem>
+                        <SelectItem value="3">Semanal</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -1126,9 +1253,13 @@ export function SettingMemberShip() {
                           defaultValue="0"
                           className="bg-white/10 border-white/20 text-white mt-1"
                           {...field}
+                          onChange={(e) =>
+                            field.onChange(Number(e.target.value))
+                          }
                         />
                       </div>
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -1205,8 +1336,10 @@ export function SettingMemberShip() {
                     <FormItem>
                       <FormLabel>Centro de costo</FormLabel>
                       <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value?.toString()}
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        defaultValue={
+                          field.value ? String(field.value) : undefined
+                        }
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
