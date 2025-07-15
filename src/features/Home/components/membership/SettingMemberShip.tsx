@@ -25,11 +25,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CustomCard } from "@/components/ui/customCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { DaySelector } from "@/components/DaySelector";
 
 export const MembershipConfigSchema = z
   .object({
     // Configuración Principal
-    name: z.string({'error':'Ingrese un Nombre para el plan'}),
+    name: z.string({ error: "Ingrese un Nombre para el plan" }),
     description: z.string().optional(),
     generate_payment: z.boolean(),
     generate_bill: z.boolean(),
@@ -82,28 +83,28 @@ export const MembershipConfigSchema = z
       .optional(),
     guest_days: z.array(
       z.enum([
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-        "Holiday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "holiday",
       ])
     ),
     start_time_restriction: z.string().optional(),
     end_time_restriction: z.string().optional(),
     restriction_days: z.array(
       z.enum([
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-        "Sunday",
-        "Holiday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday",
+        "holiday",
       ])
     ),
 
@@ -233,10 +234,13 @@ export function SettingMemberShip() {
       required_gift_voucher: false,
       admission_all_sites: false,
       controls_user_access: false,
-      guest_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      guest_days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
       /* start_time_restriction: "06:00",
       end_time_restriction: "22:00", */
-      restriction_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      restriction_days: [
+        "sunday",
+        "holiday"
+      ],
       age_restriction_value: 0,
 
       birthday_discount: false,
@@ -257,21 +261,8 @@ export function SettingMemberShip() {
       percentage_discount: 0,
       max_entry_per_day: 1,
       max_day_per_week: 0,
-
-  
     },
   });
-
-  const days: { label: string; value: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday" | "Holiday"; tooltip: string }[] = [
-    { label: "Lun", value: "Monday", tooltip: "Lunes" },
-    { label: "Mar", value: "Tuesday", tooltip: "Martes" },
-    { label: "Mie", value: "Wednesday", tooltip: "Miércoles" },
-    { label: "Jue", value: "Thursday", tooltip: "Jueves" },
-    { label: "Vie", value: "Friday", tooltip: "Viernes" },
-    { label: "Sab", value: "Saturday", tooltip: "Sábado" },
-    { label: "Dom", value: "Sunday", tooltip: "Domingo" },
-    { label: "Fes", value: "Holiday", tooltip: "Festivo" },
-  ];
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
     console.log({ data });
@@ -735,75 +726,17 @@ export function SettingMemberShip() {
             <FormField
               control={form.control}
               name="guest_days"
-              render={({ field }) => {
-                // Adaptar el valor para incluir festivos si está presente
-                const value = (field.value || []) as (
-                  | "Monday"
-                  | "Tuesday"
-                  | "Wednesday"
-                  | "Thursday"
-                  | "Friday"
-                  | "Saturday"
-                  | "Sunday"
-                  | "Holiday"
-                )[];
-                return (
-                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
-                    <FormLabel>Invitado los Días</FormLabel>
-                    <div className="grid grid-cols-8 gap-2">
-                      {days.map((day) => {
-                        const checked = value.includes(day.value);
-                        return (
-                          <div key={day.label} className="text-center">
-                            <button
-                              type="button"
-                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
-                                checked
-                                  ? "bg-emerald-500 text-white shadow-lg"
-                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
-                              }`}
-                              aria-pressed={checked}
-                              onClick={() => {
-                                if (checked) {
-                                  field.onChange(
-                                    value.filter((v) => v !== day.value) as (
-                                      | "Monday"
-                                      | "Tuesday"
-                                      | "Wednesday"
-                                      | "Thursday"
-                                      | "Friday"
-                                      | "Saturday"
-                                      | "Sunday"
-                                      | "Holiday"
-                                    )[]
-                                  );
-                                } else {
-                                  field.onChange([...value, day.value] as (
-                                    | "Monday"
-                                    | "Tuesday"
-                                    | "Wednesday"
-                                    | "Thursday"
-                                    | "Friday"
-                                    | "Saturday"
-                                    | "Sunday"
-                                    | "Holiday"
-                                  )[]);
-                                }
-                              }}
-                              title={day.tooltip}
-                            >
-                              {day.label}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Selecciona los días en los que el invitado puede asistir
-                    </p>
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem>
+                  <DaySelector
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    label="Invitado los Días"
+                    description="Selecciona los días en los que el invitado puede asistir"
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <div className="flex flex-col  p-2 rounded-lg bg-white/5 flex-1">
               <div className="space-y-3">
@@ -862,75 +795,17 @@ export function SettingMemberShip() {
             <FormField
               control={form.control}
               name="restriction_days"
-              render={({ field }) => {
-                // Adaptar el valor para incluir festivos si está presente
-                const value = (field.value || []) as (
-                  | "Monday"
-                  | "Tuesday"
-                  | "Wednesday"
-                  | "Thursday"
-                  | "Friday"
-                  | "Saturday"
-                  | "Sunday"
-                  | "Holiday"
-                )[];
-                return (
-                  <FormItem className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
-                    <FormLabel>Restricción los Dias</FormLabel>
-                    <div className="grid grid-cols-8 gap-2">
-                      {days.map((day) => {
-                        const checked = value.includes(day.value);
-                        return (
-                          <div key={day.label} className="text-center">
-                            <button
-                              type="button"
-                              className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-medium cursor-pointer transition-all border border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-400 ${
-                                checked
-                                  ? "bg-emerald-500 text-white shadow-lg"
-                                  : "bg-white/10 text-gray-400 hover:bg-white/20"
-                              }`}
-                              aria-pressed={checked}
-                              onClick={() => {
-                                if (checked) {
-                                  field.onChange(
-                                    value.filter((v) => v !== day.value) as (
-                                      | "Monday"
-                                      | "Tuesday"
-                                      | "Wednesday"
-                                      | "Thursday"
-                                      | "Friday"
-                                      | "Saturday"
-                                      | "Sunday"
-                                      | "Holiday"
-                                    )[]
-                                  );
-                                } else {
-                                  field.onChange([...value, day.value] as (
-                                    | "Monday"
-                                    | "Tuesday"
-                                    | "Wednesday"
-                                    | "Thursday"
-                                    | "Friday"
-                                    | "Saturday"
-                                    | "Sunday"
-                                    | "Holiday"
-                                  )[]);
-                                }
-                              }}
-                              title={day.tooltip}
-                            >
-                              {day.label}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Selecciona los días en los que el plan tiene restricción
-                    </p>
-                  </FormItem>
-                );
-              }}
+              render={({ field }) => (
+                <FormItem>
+                  <DaySelector
+                    value={field.value || []}
+                    onChange={field.onChange}
+                    label="Restricción los Días"
+                    description="Selecciona los días en los que el plan tiene restricción"
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
             />
             <div className="grid grid-cols-1 md:grid-cols-2  p-2 rounded-lg bg-white/5  gap-6 items-end">
               <FormField
@@ -1219,10 +1094,10 @@ export function SettingMemberShip() {
                   <FormItem>
                     <FormLabel>Formas de pago</FormLabel>
                     <Select
-                     onValueChange={(value) => field.onChange(Number(value))}
-                     defaultValue={
-                       field.value ? String(field.value) : undefined
-                     }
+                      onValueChange={(value) => field.onChange(Number(value))}
+                      defaultValue={
+                        field.value ? String(field.value) : undefined
+                      }
                     >
                       <FormControl className="w-full">
                         <SelectTrigger>
