@@ -1,7 +1,7 @@
 import { encryptionService } from '../encryption/encryption';
 import axios, { AxiosError, type AxiosInstance, type AxiosResponse, type CreateAxiosDefaults } from 'axios';
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
     success: boolean;
     data: T;
     message: string;

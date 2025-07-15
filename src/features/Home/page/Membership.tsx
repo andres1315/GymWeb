@@ -119,7 +119,7 @@ export const Membership = () => {
         <div className="max-w-6xl mx-auto space-y-4">
           <TopCard selectedPlan={selectedPlan} />
 
-          <SettingMemberShip/>
+          <SettingMemberShip />
         </div>
       </div>
     </div>
