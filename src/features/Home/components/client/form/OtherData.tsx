@@ -132,6 +132,7 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                                     <PopoverContent className="w-auto p-0">
                                         <Calendar
                                             mode="single"
+                                            captionLayout="dropdown"
                                             selected={field.value ? parseISO(field.value) : undefined}
                                             onSelect={(date) => {
                                                 if (date) {

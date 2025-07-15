@@ -49,9 +49,33 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
     return (
         <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
             <CardHeader>
-                <CardTitle className="dark:text-white flex items-center space-x-2">
-                    <User className="h-5 w-5 text-emerald-400" />
-                    <span>Datos Básicos</span>
+                <CardTitle className="dark:text-white flex items-center justify-between space-x-2">
+                    <div className="flex items-center">
+                        <User className="h-5 w-5 text-emerald-400" />
+                        <span>Datos Básicos</span>
+
+                    </div>
+                    <div>
+                        <FormField
+                            control={control}
+                            name="is_active"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="flex items-center justify-between mt-2 rounded-xl">
+                                        <div className="mr-3">
+                                            <Label className="dark:text-white font-medium">
+                                                Estado
+                                            </Label>
+                                        </div>
+                                        <FormControl>
+                                            <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
+                                        </FormControl>
+                                    </div>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
@@ -206,7 +230,7 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                                         </Label>
                                     </div>
                                     <FormControl>
-                                        <Switch disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
+                                        <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
                                     </FormControl>
                                 </div>
                                 <FormMessage />

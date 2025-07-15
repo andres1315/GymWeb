@@ -1,14 +1,15 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { EllipsisVertical, Loader, Pencil, Plus, Trash } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
+import { ItemList } from "./list/ItemList";
+import { Loader, Plus} from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import ClientService from "@/services/client/ClientService";
-import type { ActionModule } from "../../page/Client";
+import InfiniteScroll from 'react-infinite-scroll-component';
+import type { ActionModule, StatusType } from "../../page/Client";
 import type { Client } from "@/utils/interfaces/client";
+import type { FilterStatus } from "@/utils/interfaces/common";
 
 interface ClientListProps {
     clients: Client[];
@@ -16,13 +17,30 @@ interface ClientListProps {
     currentClient: Client | undefined;
     isLoading: boolean;
     setActionModule: (val: ActionModule) => void;
-    getClients: () => void;
+    getClients: (val?: string) => void;
+    page: string;
+    hasMore: boolean;
+    setFilterStatus: (val: StatusType) => void;
+    filterStatus: StatusType;
 }
 
-export function ClientList({ clients, currentClient, setCurrentClient, isLoading, setActionModule, getClients }: ClientListProps) {
+export function ClientList({ clients, currentClient, setCurrentClient, isLoading, setActionModule, getClients, page, hasMore, filterStatus, setFilterStatus }: ClientListProps) {
 
     const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
+
+    const filters: FilterStatus[] = useMemo(() => {
+        return [{
+            title: 'Todos',
+            value: 'all'
+        }, {
+            title: 'Activo',
+            value: 'active'
+        }, {
+            title: 'Inactivo',
+            value: 'inactive'
+        }]
+    }, [])
 
     const deleteClient = async () => {
         if (currentClient) {
@@ -46,16 +64,16 @@ export function ClientList({ clients, currentClient, setCurrentClient, isLoading
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold text-white">Clientes</h2>
                     <div className="flex space-x-2">
-                        {/* <Select value={filterActive} onValueChange={setFilterActive}>
+                        <Select value={filterStatus} onValueChange={setFilterStatus}>
                             <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">Todos</SelectItem>
-                                <SelectItem value="active">Activos</SelectItem>
-                                <SelectItem value="inactive">Inactivos</SelectItem>
+                                {filters.map(it => (
+                                    <SelectItem value={it.value}>{it.title}</SelectItem>
+                                ))}
                             </SelectContent>
-                        </Select> */}
+                        </Select>
                         <Button
                             size="sm"
                             className="bg-white/10 hover:bg-white/20 border-white/20 cursor-pointer"
@@ -71,81 +89,38 @@ export function ClientList({ clients, currentClient, setCurrentClient, isLoading
             </div>
 
             {/* Plans List */}
-            <div className="space-y-3 h-full overflow-y-auto">
-
-                {isLoading ? (
-                    <div className="flex items-center justify-center gap-2">
-                        <Loader className="animate-spin" />
-                    </div>
+            <div
+                id="scrollableDiv"
+                className="overflow-y-auto"
+            >
+                {clients.length ? (
+                    <InfiniteScroll
+                        dataLength={clients.length}
+                        next={() => getClients(page)}
+                        hasMore={hasMore}
+                        loader={
+                            <div className="flex items-center justify-center gap-2">
+                                <Loader className="animate-spin" />
+                            </div>
+                        }
+                        scrollableTarget="scrollableDiv"
+                        style={{ overflow: 'visible' }}
+                    >
+                        {clients.map((client, index) => (
+                            <ItemList
+                                key={index}
+                                client={client}
+                                currentClient={currentClient}
+                                getClients={getClients}
+                                index={index}
+                                setActionModule={setActionModule}
+                                setCurrentClient={setCurrentClient}
+                                setIsOpenDialog={setIsOpenDialog}
+                            />
+                        ))}
+                    </InfiniteScroll>
                 ) : (
-                    clients.length ? (
-                        clients.map((client, index) => (
-                            <Card
-                                key={client.id}
-                                className={`cursor-pointer transition-all duration-500 scale-95 hover:scale-100 backdrop-blur-sm border-white/10 ${currentClient?.id === client.id
-                                    ? "bg-gradient-to-r from-emerald-500/30 to-teal-600/30 border-emerald-500/50 shadow-lg"
-                                    : "bg-white/5 hover:bg-white/10"
-                                    }`}
-                                style={{ animationDelay: `${index * 100}ms` }}
-                                onClick={() => {
-                                    setCurrentClient(client)
-                                    setActionModule('view')
-                                }}
-                            >
-                                <CardContent className="px-4">
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-3">
-                                            <div>
-                                                <h3 className="font-semibold text-white text-sm">
-                                                    {client.first_name}{" "}{client.last_name}
-                                                </h3>
-                                                <p className="text-xs text-gray-300">
-                                                    Afiliación: {client.enrollment_date}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-4">
-                                            {client.is_active ? (
-                                                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
-                                                    Activo
-                                                </Badge>
-                                            ) : (
-                                                <Badge
-                                                    variant="secondary"
-                                                    className="bg-gray-500/20 text-gray-400"
-                                                >
-                                                    Inactivo
-                                                </Badge>
-                                            )}
-
-                                            <Popover>
-                                                <PopoverTrigger asChild>
-                                                    <EllipsisVertical className="mr-2 h-4 w-4" />
-                                                </PopoverTrigger>
-                                                <PopoverContent className="w-auto space-y-4">
-                                                    <div className="flex items-center gap-3 cursor-pointer" onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        setCurrentClient(client)
-                                                        setActionModule('update')
-                                                    }}>
-                                                        <Pencil className="text-primary" />
-                                                        <span>Editar</span>
-                                                    </div>
-                                                    <div className="flex items-center gap-3 cursor-pointer" onClick={() => {
-                                                        setCurrentClient(client)
-                                                        setIsOpenDialog(true)
-                                                    }}>
-                                                        <Trash className="text-red-600" />
-                                                        <span>Eliminar</span>
-                                                    </div>
-                                                </PopoverContent>
-                                            </Popover>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        ))
-                    ) : (
+                    !isLoading && (
                         <div className="flex items-center justify-center gap-2">
                             No se encontraron registros
                         </div>

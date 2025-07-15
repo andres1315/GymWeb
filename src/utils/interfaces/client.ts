@@ -5,7 +5,7 @@ export interface Client {
     first_name: string;
     last_name: string;
     is_leader: number;
-    is_active: boolean;
+    is_active: number;
     enrollment_date: string;
     document_type_id: number;
     blood_type_id: number;

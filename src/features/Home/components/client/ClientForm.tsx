@@ -21,8 +21,9 @@ export const clientSchema = z.object({
     identification: z.string().min(1, "Identificación obligatoria").max(50),
     first_name: z.string().min(1, "El nombre es obligatorio").max(255),
     last_name: z.string().min(1, "El apellido es obligatorio").max(255),
-    person_type_id: z.number().int().min(1).optional(),
+    person_type_id: z.number().int().optional(),
     is_leader: z.boolean(),
+    is_active: z.boolean(),
     email: z.string().email("Correo no válido").optional(),
     phone: z.string().max(20).optional(),
     address: z.string().max(255).optional(),
@@ -31,12 +32,12 @@ export const clientSchema = z.object({
     date_of_birth: z.string().optional(),
     place_of_birth: z.string().max(100).optional(),
     blood_type_id: z.number().int().optional(),
-    country_id: z.number().int().min(1).optional(),
-    gender_id: z.number().int().min(1).optional(),
+    country_id: z.number().int().optional(),
+    gender_id: z.number().int().optional(),
     eps: z.string().max(100).optional(),
-    tax_responsability_id: z.number().int().min(1).optional(),
+    tax_responsability_id: z.number().int().optional(),
     profession: z.string().max(100).optional(),
-    how_did_you_hear_id: z.number().int().min(1).optional(),
+    how_did_you_hear_id: z.number().int().optional(),
     expiration_date: z.string().optional(),
     observations: z.string().max(250).optional(),
 });
@@ -58,7 +59,8 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
         resolver: zodResolver(clientSchema),
         defaultValues: {
             enrollment_date: format(new Date(), 'yyyy-MM-dd'),
-            is_leader: false
+            is_leader: false,
+            is_active: true
         }
     });
 
@@ -72,6 +74,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 last_name: currentClient.last_name ?? "",
                 person_type_id: currentClient.person_type_id ?? undefined,
                 is_leader: currentClient.is_leader == 1 ? true : false,
+                is_active: currentClient.is_active == 1 ? true : false,
                 email: currentClient.email ?? "",
                 phone: currentClient.phone ?? "",
                 address: currentClient.address ?? "",
@@ -93,6 +96,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
             form.reset({
                 enrollment_date: format(new Date(), "yyyy-MM-dd"),
                 is_leader: false,
+                is_active: true,
                 document_type_id: undefined,
                 identification: "",
                 first_name: "",
