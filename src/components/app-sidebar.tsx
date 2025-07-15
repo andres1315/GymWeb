@@ -47,7 +47,7 @@ const data = {
     },
     {
       name: "Clientes",
-      url: "/home/home",
+      url: "/home/clients",
       icon: PieChart,
     },
     {
