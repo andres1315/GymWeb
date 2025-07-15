@@ -1,17 +1,14 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { EllipsisVertical, Loader, Pencil, Plus, Trash } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
+import { ItemList } from "./list/ItemList";
+import { Loader, Plus} from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useMemo, useState } from "react";
 import ClientService from "@/services/client/ClientService";
+import InfiniteScroll from 'react-infinite-scroll-component';
 import type { ActionModule, StatusType } from "../../page/Client";
 import type { Client } from "@/utils/interfaces/client";
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { ItemList } from "./list/ItemList";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { FilterStatus } from "@/utils/interfaces/common";
 
 interface ClientListProps {
