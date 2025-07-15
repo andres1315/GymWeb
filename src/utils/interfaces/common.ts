@@ -66,3 +66,8 @@ export interface PaginatedResponse<T> {
   path: string;
   per_page: number;
 }
+
+export interface FilterStatus {
+  title: string;
+  value: string;
+}

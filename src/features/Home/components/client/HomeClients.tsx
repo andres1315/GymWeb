@@ -5,7 +5,7 @@ export function HomeClients({ }: HomeClientsProps) {
 
     return (
         <div className="p-4">
-            Dashboard
+            Pendiente...
         </div>
     );
 }

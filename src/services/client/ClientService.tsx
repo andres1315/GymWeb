@@ -3,32 +3,34 @@ import type { AxiosResponse } from 'axios';
 import type { Client } from '@/utils/interfaces/client';
 import type { ClientFormValues } from '@/features/Home/components/client/ClientForm';
 import type { PaginatedResponse } from '@/utils/interfaces/common';
+import type { StatusType } from '@/features/Home/page/Client';
 
 interface Result<T> {
     success: boolean;
     data?: T;
     message?: string;
+    cursor?: string | null;
 }
 
 const ClientService = {
 
-    getAll: async (): Promise<Result<Client[]>> => {
+    getAll: async (page: string, statusSearch: StatusType): Promise<Result<Client[]>> => {
         try {
-            const response: AxiosResponse<PaginatedResponse<Client>> = await api.get('clients');
+            const response: AxiosResponse<PaginatedResponse<Client>> = await api.get(`clients?cursor=${page}&status=${statusSearch}`);
 
             const { status, data } = response;
 
             if (status == 200) {
-                return { success: true, data: data.data }
+                return { success: true, data: data.data, cursor: data.next_cursor }
             }
             return {
                 success: false,
-                message: 'Error get clients'
+                message: 'Error get clients',
             };
         } catch (error: any) {
             return {
                 success: false,
-                message: error.response?.data?.error?.message || error.message || 'Erro get data clients'
+                message: error.response?.data?.error?.message || error.message || 'Erro get data clients',
             };
         }
     },
