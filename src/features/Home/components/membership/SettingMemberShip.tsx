@@ -540,6 +540,7 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
                             step={1}
                             onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
+                            value={[field.value]}
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
                             <span>1</span>
@@ -574,6 +575,7 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
                             step={1}
                             onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
+                            value={[field.value]}
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
                             <span>0</span>
@@ -1024,6 +1026,9 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
                       defaultValue={
                         field.value ? String(field.value) : undefined
                       }
+                      value={
+                        field.value ? String(field.value) : undefined
+                      }
                     >
                       <FormControl className="w-full">
                         <SelectTrigger>
@@ -1081,6 +1086,7 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
                             step={1}
                             onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
+                            value={[field.value]}
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
                             <span>0%</span>
@@ -1140,6 +1146,9 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
                       <Select
                         onValueChange={(value) => field.onChange(Number(value))}
                         defaultValue={
+                          field.value ? String(field.value) : undefined
+                        }
+                        value={
                           field.value ? String(field.value) : undefined
                         }
                       >
