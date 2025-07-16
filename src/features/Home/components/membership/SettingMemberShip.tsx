@@ -27,58 +27,79 @@ import { CustomCard } from "@/components/ui/customCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DaySelector } from "@/components/DaySelector";
 import { useMembershipQuery } from "../../hooks/membership/useMembershipQuery";
-import { MembershipConfigSchema, type FormMembership } from "../../models/membership/formMembership";
+import {
+  MembershipConfigSchema,
+  type FormMembership,
+} from "../../models/membership/formMembership";
+import { Badge } from "@/components/ui/badge";
+import type { MembershipSaved } from "../../models/membership/MembershipSaved";
+import { useEffect } from "react";
 
+interface Props {
+  isCreate: boolean;
+  selectedPlan: MembershipSaved| null
+}
+const defaultValues= {
+  name:"",
+  description:"",
+  generate_payment: false,
+  generate_bill: false,
+  generate_code_customer: false,
+  generate_movement_exp_date: false,
+  controlled_plan: false,
+  required_list_members: false,
+  can_be_invited: false,
+  required_footprint: false,
+  has_assessment_physical_therapy: false,
+  required_gift_voucher: false,
+  admission_all_sites: false,
+  controls_user_access: false,
+  guest_days: [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday"
+  ] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"  | "holiday")[],
+  start_time_restriction: undefined,
+  end_time_restriction: undefined,
+  restriction_days: [
+    "sunday",
+    "holiday"
+  ] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"  | "holiday")[],
+  age_restriction_type:undefined,
+  age_restriction_value: undefined,
 
+  birthday_discount: false,
+  birthday_choose_gift_discount: false,
+  discount_early_payment: false,
+  discount_early_payment_first: false,
+  increase_arrears: false,
+  generate_payment_plan: false,
+  start_first_day_month: false,
+  contains_class_package: false,
+  issues_card: false,
+  capture_gift_voucher: false,
+  generate_cxc: false,
 
-export function SettingMemberShip() {
+  charge_registration: false,
+  price_plan: 0,
 
-  const {mutateSaveMembership } = useMembershipQuery();
+  percentage_discount: 0,
+  max_entry_per_day: 1,
+  max_day_per_week: 0,
+  min_members_group_plan:0,
+  max_members_group_plan:0,
+}
+export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
+  const { mutateSaveMembership } = useMembershipQuery();
 
   const form = useForm<FormMembership>({
     resolver: zodResolver(MembershipConfigSchema),
-    defaultValues: {
-      generate_payment: false,
-      generate_bill: false,
-      generate_code_customer: false,
-      generate_movement_exp_date: false,
-      controlled_plan: false,
-      required_list_members: false,
-      can_be_invited: false,
-      required_footprint: false,
-      has_assessment_physical_therapy: false,
-      required_gift_voucher: false,
-      admission_all_sites: false,
-      controls_user_access: false,
-      guest_days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-      /* start_time_restriction: "06:00",
-      end_time_restriction: "22:00", */
-      restriction_days: [
-        "sunday",
-        "holiday"
-      ],
-      age_restriction_value: 0,
-
-      birthday_discount: false,
-      birthday_choose_gift_discount: false,
-      discount_early_payment: false,
-      discount_early_payment_first: false,
-      increase_arrears: false,
-      generate_payment_plan: false,
-      start_first_day_month: false,
-      contains_class_package: false,
-      issues_card: false,
-      capture_gift_voucher: false,
-      generate_cxc: false,
-
-      charge_registration: false,
-      price_plan: 0,
-
-      percentage_discount: 0,
-      max_entry_per_day: 1,
-      max_day_per_week: 0,
-    },
+    defaultValues:defaultValues
   });
+
+  const resetForm = form.reset
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
     console.log({ data });
@@ -88,11 +109,100 @@ export function SettingMemberShip() {
   function onInvalid(errors: FieldErrors) {
     console.log({ errors });
   }
+
+  useEffect(()=>{
+    if(selectedPlan){
+      const valueFormPlanSelected = {
+        /* Main config */
+        name: selectedPlan.name,
+        description: selectedPlan.description,
+        generate_payment: Boolean(selectedPlan.generate_payment),
+        generate_bill: Boolean(selectedPlan.generate_bill),
+        controlled_plan: Boolean(selectedPlan.controlled_plan),
+        can_be_invited: Boolean(selectedPlan.can_be_invited),
+        has_assessment_physical_therapy: Boolean(selectedPlan.has_assessment_physical_therapy),
+        admission_all_sites: Boolean(selectedPlan.admission_all_sites),
+        controls_user_access: Boolean(selectedPlan.controls_user_access),
+        generate_movement_exp_date: Boolean(selectedPlan.generate_movement_exp_date),
+        generate_code_customer: Boolean(selectedPlan.generate_code_customer),
+        required_list_members: Boolean(selectedPlan.required_list_members),
+        required_footprint: Boolean(selectedPlan.required_footprint),
+        required_gift_voucher: Boolean(selectedPlan.required_gift_voucher),
+        charge_registration: Boolean(selectedPlan.charge_registration),
+
+        /* Access config */
+        max_entry_per_day: selectedPlan.max_entry_per_day,
+        max_day_per_week: selectedPlan.max_day_per_week,
+        min_members_group_plan: selectedPlan?.min_members_group_plan || 0,
+        max_members_group_plan: selectedPlan?.max_members_group_plan || 0,
+        guest_days: [] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[],
+        start_time_restriction:selectedPlan.start_time_restriction || undefined,
+        end_time_restriction:selectedPlan.end_time_restriction ||  undefined,
+        restriction_days: [] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[],
+        age_restriction_type:selectedPlan.age_restriction_type ||  undefined,
+        age_restriction_value:selectedPlan.age_restriction_value ||  undefined,
+
+        /* Other Config */
+        birthday_discount:Boolean(selectedPlan.birthday_discount),
+        discount_early_payment:Boolean(selectedPlan.discount_early_payment),
+        increase_arrears:Boolean(selectedPlan.increase_arrears),
+        start_first_day_month:Boolean(selectedPlan.start_first_day_month),
+        issues_card:Boolean(selectedPlan.issues_card),
+        generate_cxc:Boolean(selectedPlan.generate_cxc),
+        birthday_choose_gift_discount:Boolean(selectedPlan.birthday_choose_gift_discount),
+        discount_early_payment_first:Boolean(selectedPlan.discount_early_payment_first),
+        generate_payment_plan:Boolean(selectedPlan.generate_payment_plan),
+        contains_class_package:Boolean(selectedPlan.contains_class_package),
+        capture_gift_voucher:Boolean(selectedPlan.capture_gift_voucher),
+
+        /* Payment config */
+        type_payment:selectedPlan.type_payment,
+        price_plan:selectedPlan.price_plan,
+        percentage_discount:selectedPlan.percentage_discount,
+        cost_center:selectedPlan.cost_center,
+
+      };
+      const guest_days=[]as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[]
+      if(selectedPlan.guest_monday) guest_days.push('monday')
+      if(selectedPlan.guest_tuesday) guest_days.push('tuesday')
+      if(selectedPlan.guest_wednesday) guest_days.push('wednesday')
+      if(selectedPlan.guest_thursday) guest_days.push('thursday')
+      if(selectedPlan.guest_friday) guest_days.push('friday')
+      if(selectedPlan.guest_saturday) guest_days.push('saturday')
+      if(selectedPlan.guest_sunday) guest_days.push('sunday')
+      if(selectedPlan.guest_holiday) guest_days.push('holiday')
+      valueFormPlanSelected.guest_days=guest_days
+
+      const restriction_days=[]as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[]
+      if(selectedPlan.restrictionday_monday) restriction_days.push('monday')
+      if(selectedPlan.restrictionday_tuesday) restriction_days.push('tuesday')
+      if(selectedPlan.restrictionday_wednesday) restriction_days.push('wednesday')
+      if(selectedPlan.restrictionday_thursday) restriction_days.push('thursday')
+      if(selectedPlan.restrictionday_friday) restriction_days.push('friday')
+      if(selectedPlan.restrictionday_saturday) restriction_days.push('saturday')
+      if(selectedPlan.restrictionday_sunday) restriction_days.push('sunday')
+      if(selectedPlan.restrictionday_holiday) restriction_days.push('holiday')
+      valueFormPlanSelected.restriction_days=restriction_days
+      resetForm(valueFormPlanSelected)
+    }else{
+      console.log('entry here')
+      resetForm(
+        defaultValues
+      )
+    }
+    
+  },[selectedPlan,resetForm])
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         {/* main Config */}
         <CustomCard title="Configuración Principal" Icon={Settings}>
+          {isCreate && (
+            <Badge variant="default" className="mb-4">
+              Creando nuevo Plan
+            </Badge>
+          )}
           <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
             <FormField
               control={form.control}
@@ -428,7 +538,7 @@ export function SettingMemberShip() {
                             max={10}
                             min={1}
                             step={1}
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
@@ -441,6 +551,7 @@ export function SettingMemberShip() {
                         </div>
                       </FormControl>
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -461,7 +572,7 @@ export function SettingMemberShip() {
                             max={7}
                             min={0}
                             step={1}
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
@@ -474,6 +585,7 @@ export function SettingMemberShip() {
                         </div>
                       </FormControl>
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -496,7 +608,6 @@ export function SettingMemberShip() {
                             </FormLabel>
                             <Input
                               type="number"
-                              defaultValue="0"
                               className="bg-white/10 border-white/20 text-white mt-1"
                               {...field}
                               onChange={(e) =>
@@ -523,7 +634,6 @@ export function SettingMemberShip() {
                             </FormLabel>
                             <Input
                               type="number"
-                              defaultValue="0"
                               className="bg-white/10 border-white/20 text-white mt-1"
                               {...field}
                               onChange={(e) =>
@@ -670,7 +780,7 @@ export function SettingMemberShip() {
                         </FormLabel>
                         <Input
                           type="number"
-                          defaultValue="0"
+                          
                           className="bg-white/10 border-white/20 text-white mt-1"
                           {...field}
                         />
@@ -969,7 +1079,7 @@ export function SettingMemberShip() {
                             max={50}
                             min={0}
                             step={1}
-                            onValueChange={(value)=>field.onChange(value[0])}
+                            onValueChange={(value) => field.onChange(value[0])}
                             className="w-full"
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">

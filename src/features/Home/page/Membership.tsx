@@ -1,36 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import {
-  Calendar,
-  Clock,
-  CreditCard,
-  DollarSign,
-  Save,
-  Settings,
-  Star,
-  TrendingUp,
-  Users,
-  Zap,
-} from "lucide-react";
 import { useEffect, useState } from "react";
 import { ListMemberShip } from "../components/membership/ListMemberShip";
 import { TopCard } from "../components/membership/TopCard";
 import { SettingMemberShip } from "../components/membership/SettingMemberShip";
 import { useMembershipQuery } from "../hooks/membership/useMembershipQuery";
+import type { MembershipSaved } from "../models/membership/MembershipSaved";
 
-const membershipPlans = [
+/* const membershipPlans = [
   {
     id: 1,
     name: "MENSUAL",
@@ -91,30 +66,33 @@ const membershipPlans = [
     color: "from-gradient-to-r from-yellow-400 via-red-500 to-pink-500",
     icon: Star,
   },
-];
+]; */
 
 export const Membership = () => {
-  const {GetAllMemberships} = useMembershipQuery()
-  const {data:ListMembership, isLoading:isLoadingListMembership} =  GetAllMemberships()
-  const [selectedPlan, setSelectedPlan] = useState(membershipPlans[0]);
+  const { GetAllMemberships } = useMembershipQuery();
+  const { data: ListMembership, isLoading: isLoadingListMembership } =
+    GetAllMemberships();
 
+  /*STATE  */
+  const [selectedPlan, setSelectedPlan] = useState<MembershipSaved|null>(null);
   const [filterActive, setFilterActive] = useState("all");
+  const [isCreate, setIsCreate] = useState(false);
 
-  const filteredPlans = membershipPlans.filter((plan) => {
-    const matchesSearch = plan.name.toLowerCase().includes("");
-    const matchesFilter =
-      filterActive === "all" ||
-      (filterActive === "active" && plan.active) ||
-      (filterActive === "inactive" && !plan.active);
-    return matchesSearch && matchesFilter;
-  });
+  const filteredPlans =
+    ListMembership?.data?.filter((plan:MembershipSaved) => {
+      const matchesFilter =
+        filterActive === "all" ||
+        (filterActive === "active" && plan.is_active) ||
+        (filterActive === "inactive" && !plan.is_active);
+      return matchesFilter;
+    }) || [];
+
 
   
 
-  
-  useEffect(()=>{
-    console.log({ListMembership})
-  },[ListMembership])
+  useEffect(() => {
+    console.log({ ListMembership });
+  }, [ListMembership]);
   return (
     <div className="flex w-full ">
       <ListMemberShip
@@ -123,13 +101,14 @@ export const Membership = () => {
         filteredPlans={filteredPlans}
         setSelectedPlan={setSelectedPlan}
         selectedPlan={selectedPlan}
+        setIsCreate={setIsCreate}
       />
 
       <div className="flex-1  overflow-auto">
         <div className="max-w-6xl mx-auto space-y-4">
-          <TopCard selectedPlan={selectedPlan} />
-
-          <SettingMemberShip />
+        
+          {selectedPlan && <TopCard selectedPlan={selectedPlan} />}
+          {(isCreate || selectedPlan) && <SettingMemberShip isCreate={isCreate} selectedPlan={selectedPlan}/>}
         </div>
       </div>
     </div>

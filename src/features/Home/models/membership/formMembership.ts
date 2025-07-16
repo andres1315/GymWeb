@@ -3,7 +3,7 @@ import z from "zod";
 export const MembershipConfigSchema = z
   .object({
     // Configuración Principal
-    name: z.string({ error: "Ingrese un Nombre para el plan" }),
+    name: z.string({ error: "Ingrese un Nombre para el plan" }).trim().min(1, { message: "Nombre es requerido" }),
     description: z.string().optional(),
     generate_payment: z.boolean(),
     generate_bill: z.boolean(),
