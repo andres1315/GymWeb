@@ -1,18 +1,3 @@
-import * as React from "react"
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react"
-
-
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
 import {
@@ -22,7 +7,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { NavMain } from "./nav-main"
+
+import { useSidebarMenu } from "@/features/Home/hooks/useSidebarMenu"
+import { NavItem } from "./nav-main"
+
+
 
 
 // This is sample data.
@@ -32,45 +21,28 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    }
-  ],
-  projects: [
-    {
-      name: "Dashboard",
-      url: "/home/dashboard",
-      icon: Frame,
-    },
-    {
-      name: "Clientes",
-      url: "/home/clients",
-      icon: PieChart,
-    },
-    {
-      name: "Membresias",
-      url: "/home/membership",
-      icon: Map,
-    },
-  ],
+  
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const {sideBarMenu} =  useSidebarMenu()
   return (
     <Sidebar collapsible="icon" {...props}>
+
       <SidebarHeader>
         <TeamSwitcher />
       </SidebarHeader>
+
       <SidebarContent>
-        
-        <NavMain items={data.projects} />
+        <NavItem items={sideBarMenu.main.items} title={sideBarMenu.main.title} />
+        <NavItem items={sideBarMenu.config.items} title={sideBarMenu.config.title} />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser user={data.user} />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   )

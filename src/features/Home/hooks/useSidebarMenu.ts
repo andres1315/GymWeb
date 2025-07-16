@@ -1,25 +1,25 @@
-import { mainItemsSidebarMenu } from "@/common/enums";
 import { useSidebarMenuStore } from "@/store/useSidebarMenuStore";
-import { Home, User, UserPlus } from "lucide-react";
+import { Frame, Map, PieChart, Settings } from "lucide-react";
+import { mainItemsSidebarMenu } from "../models/sidebar/itemsMenu";
+import type { SidebarMenuItemType } from "../models/sidebar/itemsMenu";
 
 
 const sideBarMenu = {
   main:{
     title: 'Principal',
     items:[
-      {icon:Home, label:'Dashboard',name:mainItemsSidebarMenu.Dashboard},
-      {icon:User, label:'Miembros',name:mainItemsSidebarMenu.Members},
-      /* {icon:Home, label:'Accesos',name:mainItemsSidebarMenu.Entries,Component:mainItemsSidebarMenu.Entries},
-      {icon:Home, label:'Membresias',name:mainItemsSidebarMenu.Membership,Component:mainItemsSidebarMenu.Membership}, */
-      {icon:UserPlus, label:'Registro',name:mainItemsSidebarMenu.Register},
-      
-      
-    ],
+      {icon:Frame, label:'Dashboard',name:mainItemsSidebarMenu.Dashboard, url:"/home/dashboard"},
+      {icon:PieChart, label:'Clientes',name:mainItemsSidebarMenu.Customer, url: "/home/clients",},
+      {icon:Map, label:'Membresias',name:mainItemsSidebarMenu.Membership,url: "/home/membership",},    
+       
+    ] as SidebarMenuItemType[],
     
   },
-  other:{
-    title:'Other',
-    items:[]
+  config:{
+    title:'Configuración',
+    items:[
+      {icon:Settings, label:'Configuración',name:mainItemsSidebarMenu.Settings,url: "/home/settings",},    
+    ] as SidebarMenuItemType[],
   }
 }
 
@@ -30,10 +30,11 @@ export function useSidebarMenu(){
   );
 
   // Unir todos los items de todas las secciones
-  const allItems = Object.values(sideBarMenu).flatMap(section => section.items);
-
+  const allItems: SidebarMenuItemType[] = Object.values(sideBarMenu).flatMap(section => section.items);
+  
   // Buscar el componente correspondiente
   const MenuScreenSelected = allItems.find(item => item.name === currentMenu);
+  
 
   
 
