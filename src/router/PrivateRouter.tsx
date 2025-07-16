@@ -5,6 +5,7 @@ import { Home } from "@/features/Home/page/Home"
 import { PrivateLayout } from "@/features/Home/layout/PrivateLayout"
 import { Membership } from "@/features/Home/page/Membership"
 import { Client } from "@/features/Home/page/Client"
+import { Setting } from "@/features/Home/page/Settings"
 
  const PrivateRouter = () =>{
   return (
@@ -15,6 +16,7 @@ import { Client } from "@/features/Home/page/Client"
         <Route path="/home" element={<Home/>} />
         <Route path="/membership" element={<Membership/>} />
         <Route path="/clients" element={<Client/>} />
+        <Route path="/settings" element={<Setting/>} />
       </Route>
     </RoutesNotFound>
   )

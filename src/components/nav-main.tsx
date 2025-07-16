@@ -4,7 +4,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
+  
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router";
 import { useSidebarMenuStore } from "@/store/useSidebarMenuStore";
@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function NavItem({ items, title }: Props) {
-  const { isMobile } = useSidebar();
+  /* const { isMobile } = useSidebar(); */
   const currentMenuDisplayed = useSidebarMenuStore(
     (state) => state.currentMenu
   );

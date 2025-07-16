@@ -108,7 +108,7 @@ export const Membership = () => {
         <div className="max-w-6xl mx-auto space-y-4">
         
           {selectedPlan && <TopCard selectedPlan={selectedPlan} />}
-          {(isCreate || selectedPlan) && <SettingMemberShip isCreate={isCreate} selectedPlan={selectedPlan}/>}
+          {(isCreate || selectedPlan) && <SettingMemberShip isCreate={isCreate} selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} setIsCreate={setIsCreate}/>}
         </div>
       </div>
     </div>

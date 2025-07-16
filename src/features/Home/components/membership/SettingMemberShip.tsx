@@ -34,10 +34,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import type { MembershipSaved } from "../../models/membership/MembershipSaved";
 import { useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
   isCreate: boolean;
   selectedPlan: MembershipSaved| null
+  setIsCreate: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedPlan:React.Dispatch<React.SetStateAction<MembershipSaved|null>>
 }
 const defaultValues= {
   name:"",
@@ -91,12 +94,13 @@ const defaultValues= {
   min_members_group_plan:0,
   max_members_group_plan:0,
 }
-export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
+export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelectedPlan }: Props) {
+  const queryClient = useQueryClient()
   const { mutateSaveMembership } = useMembershipQuery();
 
   const form = useForm<FormMembership>({
     resolver: zodResolver(MembershipConfigSchema),
-    defaultValues:defaultValues
+    defaultValues
   });
 
   const resetForm = form.reset
@@ -192,6 +196,17 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
     }
     
   },[selectedPlan,resetForm])
+
+  useEffect(() => {
+    if (mutateSaveMembership.isSuccess) {
+      
+      /* successToast("Historia Clinica Almacenada"); */
+      form.reset(defaultValues);
+      setIsCreate(false)
+      setSelectedPlan(null)
+      queryClient.invalidateQueries({ queryKey: ['GetAllMemberships'] })
+    }
+  }, [mutateSaveMembership.isSuccess]);
 
   return (
     <Form {...form}>
@@ -1173,7 +1188,7 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
           </div>
         </CustomCard>
 
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-end space-x-4 mt-4">
           <Button
             variant="outline"
             type="submit"
@@ -1186,7 +1201,7 @@ export function SettingMemberShip({ isCreate,selectedPlan }: Props) {
             type="submit"
           >
             <Save className="mr-2 h-4 w-4" />
-            Guardar Configuración
+            Guardar
           </Button>
         </div>
       </form>
