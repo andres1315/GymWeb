@@ -1,12 +1,14 @@
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { FormMembership } from "../../models/membership/formMembership";
 import { MembershipService } from "@/services/membership/MembershipService";
-import { useMutation } from "@tanstack/react-query";
-import type { FormMemberShip } from "../../components/membership/SettingMemberShip";
+
 
 export function useMembershipQuery(){
   const membershipService =  new MembershipService();
 
   const mutateSaveMembership = useMutation({
-    mutationFn: (data:FormMemberShip) => membershipService.store(data),
+    mutationFn: (data:FormMembership) => membershipService.store(data),
     onSuccess: (e) => {
       console.log(e)
     },
@@ -15,7 +17,15 @@ export function useMembershipQuery(){
     }
   })
 
+  function GetAllMemberships(){
+    return useQuery({
+      queryKey: ['GetAllMemberships'],
+      queryFn: () => membershipService.get()    
+    })
+  }
+
   return {
-    mutateSaveMembership
+    mutateSaveMembership,
+    GetAllMemberships
   }
 }

@@ -24,10 +24,11 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ListMemberShip } from "../components/membership/ListMemberShip";
 import { TopCard } from "../components/membership/TopCard";
 import { SettingMemberShip } from "../components/membership/SettingMemberShip";
+import { useMembershipQuery } from "../hooks/membership/useMembershipQuery";
 
 const membershipPlans = [
   {
@@ -93,6 +94,8 @@ const membershipPlans = [
 ];
 
 export const Membership = () => {
+  const {GetAllMemberships} = useMembershipQuery()
+  const {data:ListMembership, isLoading:isLoadingListMembership} =  GetAllMemberships()
   const [selectedPlan, setSelectedPlan] = useState(membershipPlans[0]);
 
   const [filterActive, setFilterActive] = useState("all");
@@ -105,6 +108,13 @@ export const Membership = () => {
       (filterActive === "inactive" && !plan.active);
     return matchesSearch && matchesFilter;
   });
+
+  
+
+  
+  useEffect(()=>{
+    console.log({ListMembership})
+  },[ListMembership])
   return (
     <div className="flex w-full ">
       <ListMemberShip

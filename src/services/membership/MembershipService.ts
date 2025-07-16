@@ -15,4 +15,8 @@ export class MembershipService {
     return this.apiService.post('/membership', data)
   }
 
+  get(){
+    return this.apiService.get('/membership')
+  }
+
 }

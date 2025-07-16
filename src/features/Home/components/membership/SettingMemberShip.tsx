@@ -27,7 +27,7 @@ import { CustomCard } from "@/components/ui/customCard";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DaySelector } from "@/components/DaySelector";
 import { useMembershipQuery } from "../../hooks/membership/useMembershipQuery";
-import type { FormMembership, MembershipConfigSchema } from "../../models/membership/formMembership";
+import { MembershipConfigSchema, type FormMembership } from "../../models/membership/formMembership";
 
 
 
@@ -969,7 +969,7 @@ export function SettingMemberShip() {
                             max={50}
                             min={0}
                             step={1}
-                            onValueChange={field.onChange}
+                            onValueChange={(value)=>field.onChange(value[0])}
                             className="w-full"
                           />
                           <div className="flex justify-between text-xs text-gray-400 mt-2">
@@ -983,6 +983,7 @@ export function SettingMemberShip() {
                         </div>
                       </FormControl>
                     </div>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
