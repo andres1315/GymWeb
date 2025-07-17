@@ -132,7 +132,7 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                                     <FormControl>
                                         <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                             <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                <SelectValue placeholder="Seleccionar" />
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {documentsTypes.map(item => (
@@ -203,7 +203,7 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                                     <FormControl>
                                         <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                             <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                <SelectValue placeholder="Seleccionar" />
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {personsTypes.map(item => (

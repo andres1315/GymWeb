@@ -143,7 +143,7 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                                 <FormControl>
                                     <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                         <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
+                                            {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                         </SelectTrigger>
                                         <SelectContent>
                                             {countries.map(item => (
@@ -172,7 +172,7 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                                 <FormControl>
                                     <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                         <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
+                                            {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                         </SelectTrigger>
                                         <SelectContent>
                                             {bloods.map(item => (
@@ -201,7 +201,7 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                                 <FormControl>
                                     <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                         <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                            <SelectValue placeholder="Seleccionar" />
+                                            {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                         </SelectTrigger>
                                         <SelectContent>
                                             {genders.map(item => (
