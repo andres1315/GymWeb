@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useSettingQuery } from "../../hooks/settings/useSettingQuery";
+import { useEffect } from "react";
 
 const defaultValues = {
   name: "",
@@ -84,8 +85,9 @@ export function FormSettings() {
     resolver: zodResolver(AppConfigSchema),
     defaultValues: defaultValues,
   });
-
-  const {mutateSaveSettingApp} = useSettingQuery()
+  const resetForm = form.reset;
+  const { mutateSaveSettingApp, GetConfigApp } = useSettingQuery();
+  const { data: SettingApp, isLoading: isLoadingSettingApp } = GetConfigApp();
 
   function onSubmit(data: z.infer<typeof AppConfigSchema>) {
     console.log({ data });
@@ -95,6 +97,78 @@ export function FormSettings() {
   function onInvalid(errors: FieldErrors) {
     console.log({ errors });
   }
+
+  useEffect(() => {
+    if (SettingApp && SettingApp.data?.data) {
+      const savedSetting = SettingApp.data?.data;
+      const valueFormPlanSelected = {
+        /* Main config */
+        name: savedSetting.name,
+        company_name: savedSetting.company_name,
+        address: savedSetting.company_name,
+        email: savedSetting?.email || undefined,
+        nit: savedSetting.nit,
+        phone: savedSetting?.phone || undefined,
+        main_address: savedSetting?.main_address || undefined,
+        website: savedSetting?.website || undefined,
+        site: savedSetting?.site || undefined,
+        city: savedSetting?.city || undefined,
+
+        resolution_current: savedSetting?.resolution_current || undefined,
+        resolution_start_date: savedSetting?.resolution_start_date || undefined,
+        resolution_exp_date: savedSetting?.resolution_exp_date || undefined,
+        resolution_validity: savedSetting?.resolution_validity || undefined,
+        resolution_start_number:
+          savedSetting?.resolution_start_number || undefined,
+        resolution_end_number: savedSetting?.resolution_end_number || undefined,
+        resolution_prefix: savedSetting?.resolution_prefix || undefined,
+        act_dian: savedSetting?.act_dian || undefined,
+        act_ica: savedSetting?.act_ica || undefined,
+        tariff: savedSetting?.tariff || undefined,
+        reteiva: savedSetting?.reteiva || undefined,
+        commercial_registration:
+          savedSetting?.commercial_registration || undefined,
+        withholding: savedSetting?.withholding || undefined,
+        regime_vat: savedSetting?.regime_vat || undefined,
+        vat: savedSetting?.vat || undefined,
+
+        /* General config */
+        is_electronic_biller: savedSetting?.is_electronic_biller,
+        contingency: savedSetting?.contingency,
+        date_format: savedSetting?.date_format || undefined,
+        currency: savedSetting?.currency || undefined,
+        adds_potential_customers: savedSetting?.adds_potential_customers,
+        required_year_issuescard_customer:
+          savedSetting?.required_year_issuescard_customer,
+        required_type_customer_issuescard_customer:
+          savedSetting?.required_type_customer_issuescard_customer,
+        manages_corporate_customer: savedSetting?.manages_corporate_customer,
+        required_classification_customer:
+          savedSetting?.required_classification_customer,
+        required_place_birth_issuescard_customer:
+          savedSetting?.required_place_birth_issuescard_customer,
+        groups_users: savedSetting?.groups_users,
+        required_company_issuescard_customer:
+          savedSetting?.required_company_issuescard_customer,
+        manages_cost_center: savedSetting?.manages_cost_center,
+        how_did_you_hear_about_us: savedSetting?.how_did_you_hear_about_us,
+        manages_last_name: savedSetting?.manages_last_name,
+        ban_users: savedSetting?.ban_users,
+        percentage_recognition_freezing:
+          savedSetting?.percentage_recognition_freezing || undefined,
+        physiotherapy_holiday: savedSetting?.physiotherapy_holiday,
+        discount_extension_days: savedSetting?.discount_extension_days,
+        save_dni_user: savedSetting?.save_dni_user,
+        capture_directly_photo: savedSetting?.capture_directly_photo,
+        new_customer_courtesy_days:
+          savedSetting?.new_customer_courtesy_days || undefined,
+      };
+      resetForm(valueFormPlanSelected);
+    } else {
+      
+      resetForm(defaultValues);
+    }
+  }, [SettingApp, resetForm]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
@@ -637,7 +711,7 @@ export function FormSettings() {
 
         {/* Tabs */}
         <CustomCard title="Parametros" Icon={Settings}>
-          <Tabs defaultValue="generalParameters" className="" >
+          <Tabs defaultValue="generalParameters" className="">
             <TabsList>
               <TabsTrigger value="generalParameters">Generales</TabsTrigger>
               <TabsTrigger value="other">Otro</TabsTrigger>
@@ -687,7 +761,7 @@ export function FormSettings() {
                     <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                       <FormLabel>Formato de Fecha</FormLabel>
                       <Select
-                        onValueChange={(value) => field.onChange((value))}
+                        onValueChange={(value) => field.onChange(value)}
                         defaultValue={
                           field.value ? String(field.value) : undefined
                         }
@@ -725,7 +799,7 @@ export function FormSettings() {
                     <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
                       <FormLabel>Moneda</FormLabel>
                       <Select
-                        onValueChange={(value) => field.onChange((value))}
+                        onValueChange={(value) => field.onChange(value)}
                         defaultValue={
                           field.value ? String(field.value) : undefined
                         }

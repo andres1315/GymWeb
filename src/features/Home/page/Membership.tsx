@@ -90,9 +90,7 @@ export const Membership = () => {
 
   
 
-  useEffect(() => {
-    console.log({ ListMembership });
-  }, [ListMembership]);
+  
   return (
     <div className="flex w-full ">
       <ListMemberShip
