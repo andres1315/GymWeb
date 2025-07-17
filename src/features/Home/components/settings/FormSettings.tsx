@@ -900,24 +900,7 @@ export function FormSettings() {
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="manages_corporate_customer"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
-                      <div>
-                        <FormLabel>Maneja Clientes Coorporativos</FormLabel>
-                      </div>
-
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
+               
                 <FormField
                   control={form.control}
                   name="required_classification_customer"
