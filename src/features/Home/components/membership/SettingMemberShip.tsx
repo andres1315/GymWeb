@@ -817,7 +817,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="birthday_discount"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5 col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Dcto Cumpleaños</FormLabel>
                     <FormDescription className="text-xs mt-1">
@@ -838,7 +838,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="birthday_choose_gift_discount"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Obsequio / Dcto</FormLabel>
                     <FormDescription className="text-xs mt-1">
@@ -859,7 +859,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="discount_early_payment"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Dcto Pronto Pago</FormLabel>
                     <FormDescription className="text-xs mt-1">
@@ -880,7 +880,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="discount_early_payment_first"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Dcto Pronto Pago 1er pago</FormLabel>
                     <FormDescription className="text-xs mt-1">
@@ -901,7 +901,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="increase_arrears"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Incremento por Mora en Pago</FormLabel>
                   </div>
@@ -919,7 +919,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="generate_payment_plan"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Genera Plan Pago</FormLabel>
                   </div>
@@ -937,7 +937,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="start_first_day_month"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Inicia 1er día del Mes</FormLabel>
                   </div>
@@ -955,7 +955,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="contains_class_package"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Contiene paquetes de clases</FormLabel>
                   </div>
@@ -973,7 +973,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="issues_card"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Expide FICHA</FormLabel>
                   </div>
@@ -991,7 +991,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="capture_gift_voucher"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Captar Abonos</FormLabel>
                   </div>
@@ -1009,7 +1009,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               control={form.control}
               name="generate_cxc"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5">
+                <FormItem className="flex items-center justify-between p-2 rounded-lg bg-white/5  col-span-2 md:col-span-1">
                   <div>
                     <FormLabel>Genera CxC</FormLabel>
                   </div>
@@ -1029,7 +1029,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
         {/* Configuración de Pagos*/}
         <CustomCard title="Configuración de Pagos" Icon={CreditCard}>
           <div className="grid grid-cols-3 gap-6">
-            <div className="space-y-4">
+            <div className="space-y-3 col-span-3 lg:col-span-1">
               <FormField
                 control={form.control}
                 name="type_payment"
@@ -1120,7 +1120,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               />
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 col-span-3 lg:col-span-1">
               {/* <Label className="text-white font-medium">
                 Configuración Avanzada
               </Label>
@@ -1140,7 +1140,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
               </div> */}
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 col-span-3 lg:col-span-1">
               {/*  <Label className="text-white font-medium">
                 Integración Contable
               </Label> */}

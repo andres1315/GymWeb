@@ -20,7 +20,7 @@ export function DaySelector({ value, onChange, label, description }: DaySelector
   return (
     <div className="p-2 rounded-lg bg-gradient-to-r from-slate-500/10 to-emerald-700/10 border border-slate-500/20">
       <div className="font-medium mb-1">{label}</div>
-      <div className="grid grid-cols-8 gap-2">
+      <div className="grid grid-cols-4 md:grid-cols-8 gap-2 justify-items-center">
         {days.map((day) => {
           const checked = value.includes(day.value);
           return (

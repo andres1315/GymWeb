@@ -92,7 +92,7 @@ export const Membership = () => {
 
   
   return (
-    <div className="flex w-full ">
+    <div className="grid grid-cols-12 w-full mx-2 md:mx-0">
       <ListMemberShip
         filterActive={filterActive}
         setFilterActive={setFilterActive}
@@ -102,8 +102,8 @@ export const Membership = () => {
         setIsCreate={setIsCreate}
       />
 
-      <div className="flex-1  overflow-auto">
-        <div className="max-w-6xl mx-auto space-y-4">
+      <div className="flex-1 overflow-auto col-span-12 md:col-span-9 mt-6 md:mt-0">
+        <div className="md:max-w-6xl mx-auto space-y-4">
         
           {selectedPlan && <TopCard selectedPlan={selectedPlan} />}
           {(isCreate || selectedPlan) && <SettingMemberShip isCreate={isCreate} selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} setIsCreate={setIsCreate}/>}

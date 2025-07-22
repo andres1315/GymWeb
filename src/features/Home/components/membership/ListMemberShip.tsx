@@ -41,13 +41,13 @@ export function ListMemberShip({
     setSelectedPlan(null)
   }
   return (
-    <div className="w-96 p-6 backdrop-blur-xl bg-white/5 border-r border-white/10 flex flex-col h-full">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+    <div className="col-span-12 md:col-span-3 md:p-6 backdrop-blur-xl bg-white/5 border-r border-white/10 flex flex-col h-full overflow-auto " >
+      <div className="mb-6 w-full">
+        <div className="flex flex-col xl:flex-row items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Planes</h2>
           <div className="flex space-x-2">
             <Select value={filterActive} onValueChange={setFilterActive}>
-              <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
+              <SelectTrigger className="w-auto lg:w-32 bg-white/10 border-white/20 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -85,8 +85,8 @@ export function ListMemberShip({
               style={{ animationDelay: `${index * 100}ms` }}
               onClick={()=>handleOnSelectPlan(plan)}
             >
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
+              <CardContent className="p-2">
+                <div className="flex items-center flex-col lg:flex-row justify-between ">
                   <div className="flex items-center space-x-3">
                     <div
                       className={`p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 shadow-lg`}
@@ -103,7 +103,7 @@ export function ListMemberShip({
                     </div>
                   </div>
                   {plan.is_active ? (
-                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 mt-2 lg:mt-0">
                       Activo
                     </Badge>
                   ) : (
