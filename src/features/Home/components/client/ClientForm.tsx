@@ -33,6 +33,8 @@ export const clientSchema = z.object({
     place_of_birth: z.string().max(100).optional(),
     blood_type_id: z.number().int().optional(),
     country_id: z.number().int().optional(),
+    city_id: z.number().int().optional(),
+    state_id: z.number().int().optional(),
     gender_id: z.number().int().optional(),
     eps: z.string().max(100).optional(),
     tax_responsability_id: z.number().int().optional(),
@@ -84,6 +86,8 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 place_of_birth: currentClient.place_of_birth ?? "",
                 blood_type_id: currentClient.blood_type_id ?? undefined,
                 country_id: currentClient.country_id ?? undefined,
+                city_id: currentClient.city_id ?? undefined,
+                state_id: currentClient.state_id ?? undefined,
                 gender_id: currentClient.gender_id ?? undefined,
                 eps: currentClient.eps ?? "",
                 tax_responsability_id: currentClient.tax_responsability_id ?? undefined,
@@ -111,6 +115,8 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 place_of_birth: "",
                 blood_type_id: undefined,
                 country_id: undefined,
+                state_id: undefined,
+                city_id: undefined,
                 gender_id: undefined,
                 eps: "",
                 tax_responsability_id: undefined,
@@ -151,7 +157,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                     <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
                         <ContactInformation control={form.control} actionModule={actionModule} />
 
-                        <AdditionalData control={form.control} actionModule={actionModule} />
+                        <AdditionalData control={form.control} actionModule={actionModule} watchForm={form.watch} />
                     </div>
 
                     <OtherData control={form.control} actionModule={actionModule} />

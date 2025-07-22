@@ -41,6 +41,26 @@ export interface Country {
   updated_at: string;
 }
 
+export interface State {
+  id: number;
+  name: string;
+  code: string;
+  country_id: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface City {
+  id: number;
+  name: string;
+  code: string;
+  state_id: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface HowDidYouHear {
   id: number;
   name: string;
