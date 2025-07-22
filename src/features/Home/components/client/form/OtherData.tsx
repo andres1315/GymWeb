@@ -97,7 +97,7 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                                     <FormControl>
                                         <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                             <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                <SelectValue placeholder="Seleccionar" />
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {howDidYouHear.map(item => (
@@ -164,7 +164,7 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                                     <FormControl>
                                         <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
                                             <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                <SelectValue placeholder="Seleccionar" />
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {taxResponsability.map(item => (
