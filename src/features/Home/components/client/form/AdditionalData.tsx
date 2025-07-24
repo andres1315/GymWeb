@@ -13,27 +13,44 @@ import BloodTypesService from "@/services/bloodTypes/BloodTypesService";
 import CountriesService from "@/services/countries/CountriesService";
 import GenderService from "@/services/gender/GenderService";
 import type { ActionModule } from "@/features/Home/page/Client";
-import type { BloodType, Country, Gender } from "@/utils/interfaces/common";
+import type { BloodType, City, Country, Gender, State } from "@/utils/interfaces/common";
 import type { ClientFormValues } from "../ClientForm";
-import type { Control } from "react-hook-form";
+import type { Control, UseFormWatch } from "react-hook-form";
+import StatesService from "@/services/states/StatesService";
+import CityService from "@/services/cities/CityService";
 
 interface BasicDataProps {
     control: Control<ClientFormValues>;
     actionModule: ActionModule;
+    watchForm: UseFormWatch<ClientFormValues>
 }
 
-export function AdditionalData({ control, actionModule }: BasicDataProps) {
+export function AdditionalData({ control, actionModule, watchForm }: BasicDataProps) {
 
     const [age, setAge] = useState<string>("");
     const [countries, setCountries] = useState<Country[]>([]);
     const [bloods, setBloods] = useState<BloodType[]>([]);
     const [genders, setGenders] = useState<Gender[]>([]);
+    const [states, setStates] = useState<State[]>([]);
+    const [cities, setCities] = useState<City[]>([]);
 
     useEffect(() => {
         getCountries()
         getBloodTypes();
         getGenders();
     }, [])
+
+    useEffect(() => {
+        if (watchForm('country_id')) {
+            getStates()
+        }
+    }, [watchForm('country_id')])
+
+    useEffect(() => {
+        if (watchForm('state_id')) {
+            getCities()
+        }
+    }, [watchForm('state_id')])
 
     const getCountries = async () => {
         const response = await CountriesService.getAll();
@@ -53,6 +70,20 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
         const response = await GenderService.getAll();
         if (response.success) {
             setGenders(response.data ?? [])
+        }
+    }
+
+    const getStates = async () => {
+        const response = await StatesService.getAll(watchForm('country_id') + "");
+        if (response.success) {
+            setStates(response.data ?? [])
+        }
+    }
+
+    const getCities = async () => {
+        const response = await CityService.getAll(watchForm('state_id') + "");
+        if (response.success) {
+            setCities(response.data ?? [])
         }
     }
 
@@ -117,24 +148,10 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
 
                 <FormField
                     control={control}
-                    name="place_of_birth"
-                    render={({ field }) => (
-                        <FormItem>
-                            <Label>Lugar de Nacimiento</Label>
-                            <FormControl>
-                                <Input disabled={actionModule === 'view'} placeholder="Ej: Pereira, Risaralda" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={control}
                     name="country_id"
                     render={({ field }) => (
                         <FormItem>
-                            <Label>Pais:</Label>
+                            <Label>Pais de Nacimiento:</Label>
                             {!countries.length ? (
                                 <FormControl>
                                     <Input disabled={true} placeholder="Cargando..." />
@@ -157,6 +174,68 @@ export function AdditionalData({ control, actionModule }: BasicDataProps) {
                         </FormItem>
                     )}
                 />
+
+                <div className="grid grid-cols-2 gap-3">
+                    <FormField
+                        control={control}
+                        name="state_id"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label>Departamento:</Label>
+                                {!states.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Seleccione una opción..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {states.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>
+                                                        {item.name.charAt(0).toUpperCase() + item.name.slice(1).toLowerCase()}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={control}
+                        name="city_id"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Label>Ciudad:</Label>
+                                {!cities.length ? (
+                                    <FormControl>
+                                        <Input disabled={true} placeholder="Seleccione una opción..." />
+                                    </FormControl>
+                                ) : (
+                                    <FormControl>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {cities.map(item => (
+                                                    <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                )}
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </div>
 
                 <FormField
                     control={control}

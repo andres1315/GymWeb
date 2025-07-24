@@ -1,4 +1,4 @@
-import type { Country, DocumentType, Gender, HowDidYouHear, PersonType, TaxResponsability } from "./common";
+import type { City, Country, DocumentType, Gender, HowDidYouHear, PersonType, State, TaxResponsability } from "./common";
 
 export interface Client {
     id: number;
@@ -15,6 +15,8 @@ export interface Client {
     date_of_birth?: string | null;
     place_of_birth?: string | null;
     country_id?: number | null;
+    state_id?: number | null;
+    city_id?: number | null;
     address?: string | null;
     phone?: string | null;
     email: string;
@@ -34,4 +36,6 @@ export interface Client {
     gender?: Gender | null;
     country?: Country | null;
     how_did_you_hear?: HowDidYouHear | null;
+    state?: State | null;
+    city?: City | null;
 }
