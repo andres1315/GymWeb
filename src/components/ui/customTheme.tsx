@@ -64,7 +64,7 @@ function AnimatedGradientButton({
     >
       <div
         className={cn(
-          "absolute inset-0 rounded-[inherit] bg-gradient-to-r from-primary to-primary/50 opacity-[0.15] blur-xl transition-all duration-300",
+          "absolute inset-0 rounded-[inherit] bg-gradient-to-r from-primary/20 to-primary/30 opacity-[0.15] blur-xl transition-all duration-300",
           hovering ? "opacity-[0.25] blur-xl" : "opacity-[0.15] blur-xl",
         )}
       />

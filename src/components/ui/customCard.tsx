@@ -7,10 +7,11 @@ interface Props{
 }
 export function CustomCard({title,children,Icon}:Props) {
   return (
+    
     <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl mt-4">
       <CardHeader>
         <CardTitle className="text-white flex items-center space-x-2">
-          {Icon && <Icon className="h-5 w-5 text-emerald-400"/>}
+          {Icon && <Icon className="h-5 w-5 text-primary"/>}
           <span>{title}</span>
         </CardTitle>
       </CardHeader>

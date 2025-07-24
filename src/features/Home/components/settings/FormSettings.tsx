@@ -6,7 +6,7 @@ import {
 } from "../../models/settings/formSettings";
 import type z from "zod";
 import { CustomCard } from "@/components/ui/customCard";
-import { Save, Settings } from "lucide-react";
+import { Building, Clock, DollarSign, Save, Settings } from "lucide-react";
 import {
   Form,
   FormControl,
@@ -28,7 +28,11 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useSettingQuery } from "../../hooks/settings/useSettingQuery";
-import { useEffect } from "react";
+import { useEffect, type JSX } from "react";
+import {
+  AnimatedGradientButton,
+  BackgroundGradient,
+} from "@/components/ui/customTheme";
 
 const defaultValues = {
   name: "",
@@ -165,16 +169,16 @@ export function FormSettings() {
       };
       resetForm(valueFormPlanSelected);
     } else {
-      
       resetForm(defaultValues);
     }
   }, [SettingApp, resetForm]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         {/* main Config */}
-        <CustomCard title="Configuración Principal" Icon={Settings}>
-          <div className="grid grid-cols-1 md:grid-cols-4  gap-4">
+        <CustomCard title="Información de la Empresa" Icon={Building}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4">
             <FormField
               control={form.control}
               name="name"
@@ -183,7 +187,7 @@ export function FormSettings() {
                   <div className="w-full">
                     <FormControl>
                       <div>
-                        <FormLabel className="">Nombre</FormLabel>
+                        <FormLabel className="">Nombre Comercial</FormLabel>
                         <Input
                           type="string"
                           className="bg-white/10 border-white/20 text-white mt-1"
@@ -205,6 +209,27 @@ export function FormSettings() {
                     <FormControl>
                       <div>
                         <FormLabel className="">Razon Social</FormLabel>
+                        <Input
+                          type="string"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="nit"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
+                  <div className="w-full">
+                    <FormControl>
+                      <div>
+                        <FormLabel className="">Nit</FormLabel>
                         <Input
                           type="string"
                           className="bg-white/10 border-white/20 text-white mt-1"
@@ -261,6 +286,48 @@ export function FormSettings() {
             />
             <FormField
               control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
+                  <div className="w-full">
+                    <FormControl>
+                      <div>
+                        <FormLabel className="">Ciudad</FormLabel>
+                        <Input
+                          type="string"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="site"
+              render={({ field }) => (
+                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
+                  <div className="w-full">
+                    <FormControl>
+                      <div>
+                        <FormLabel className="">Sede</FormLabel>
+                        <Input
+                          type="string"
+                          className="bg-white/10 border-white/20 text-white mt-1"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
@@ -280,27 +347,7 @@ export function FormSettings() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="nit"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Nit</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="phone"
@@ -343,381 +390,391 @@ export function FormSettings() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="site"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Sede</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Ciudad</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
         </CustomCard>
 
         {/* Tax Info */}
         <CustomCard title="Informacion Tributaria" Icon={Settings}>
-          <div className="grid grid-cols-1 md:grid-cols-6  gap-4">
-            <FormField
-              control={form.control}
-              name="resolution_current"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Resolución Actual</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4">
+            {/* Resolution */}
+
+            {/* <div className=""> */}
+            {/* <div className=" z-10 "> */}
+            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4">
+              <div className="border-0 bg-transparent shadow-none h-full">
+                <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
+                  <div className="w-3 h-3 bg-primary rounded-full"></div>
+                  <span>Resolución DIAN</span>
+                </h4>
+                <div className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="resolution_current"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">
+                                Número de Resolución
+                              </FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="resolution_prefix"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Prefijo</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <FormField
+                      control={form.control}
+                      name="resolution_start_number"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                          <div className="w-full">
+                            <FormControl>
+                              <div>
+                                <FormLabel className="">Desde</FormLabel>
+                                <Input
+                                  type="number"
+                                  className="bg-white/10 border-white/20 text-white mt-1"
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="resolution_end_number"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                          <div className="w-full">
+                            <FormControl>
+                              <div>
+                                <FormLabel className="">Hasta</FormLabel>
+                                <Input
+                                  type="number"
+                                  className="bg-white/10 border-white/20 text-white mt-1"
+                                  {...field}
+                                />
+                              </div>
+                            </FormControl>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_start_date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Fecha de Emisión</FormLabel>
-                        <Input
-                          type="time"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
+                </div>
+              </div>
+            </div>
+            {/* </div> */}
+            {/* </div> */}
+
+            {/* date and expiration */}
+            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4  ">
+              <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
+                <Clock className="w-4 h-4 text-primary" />
+                <span>Vigencia</span>
+              </h4>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="resolution_start_date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                      <div className="w-full">
+                        <FormControl>
+                          <div>
+                            <FormLabel className="">Fecha de Emisión</FormLabel>
+                            <Input
+                              type="date"
+                              className="bg-white/10 border-white/20 text-white mt-1"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
                       </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_exp_date"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Vence</FormLabel>
-                        <Input
-                          type="time"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="resolution_exp_date"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                      <div className="w-full">
+                        <FormControl>
+                          <div>
+                            <FormLabel className="">
+                              Fecha de Vencimiento
+                            </FormLabel>
+                            <Input
+                              type="date"
+                              className="bg-white/10 border-white/20 text-white mt-1"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
                       </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_validity"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Vigencia</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="resolution_validity"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                      <div className="w-full">
+                        <FormControl>
+                          <div>
+                            <FormLabel className="">Vigencia</FormLabel>
+                            <Input
+                              type="string"
+                              className="bg-white/10 border-white/20 text-white mt-1"
+                              {...field}
+                            />
+                          </div>
+                        </FormControl>
                       </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_start_number"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Desde</FormLabel>
-                        <Input
-                          type="number"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_end_number"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Hasta</FormLabel>
-                        <Input
-                          type="number"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="resolution_prefix"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Prefijo</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="act_dian"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Act. DIAN</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="act_ica"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Act. ICA</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tariff"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Tarifa</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="reteiva"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">ReteIVA</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="commercial_registration"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Matricula Mercantil</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="withholding"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Retención</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="regime_vat"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">Regimen IVA</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="vat"
-              render={({ field }) => (
-                <FormItem className="flex flex-col justify-between p-2 rounded-lg bg-white/5">
-                  <div className="w-full">
-                    <FormControl>
-                      <div>
-                        <FormLabel className="">IVA</FormLabel>
-                        <Input
-                          type="string"
-                          className="bg-white/10 border-white/20 text-white mt-1"
-                          {...field}
-                        />
-                      </div>
-                    </FormControl>
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            {/* Tarifas y mas */}
+            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4   md:col-span-2 lg:col-span-1">
+              <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
+                <DollarSign className="w-4 h-4 text-primary" />
+                <span>Impuestos y otros</span>
+              </h4>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="act_dian"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Act. DIAN</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="act_ica"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Act. ICA</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="tariff"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Tarifa</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="reteiva"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Rete IVA</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="commercial_registration"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">
+                                Matricula Mercantil
+                              </FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="withholding"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Retención</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="regime_vat"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Regimen IVA</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="vat"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col justify-between p-2 rounded-lg ">
+                        <div className="w-full">
+                          <FormControl>
+                            <div>
+                              <FormLabel className="">Tarifa IVA (%)</FormLabel>
+                              <Input
+                                type="string"
+                                className="bg-white/10 border-white/20 text-white mt-1"
+                                {...field}
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </CustomCard>
 
         {/* Tabs */}
         <CustomCard title="Parametros" Icon={Settings}>
           <Tabs defaultValue="generalParameters" className="">
-            <TabsList>
-              <TabsTrigger value="generalParameters">Generales</TabsTrigger>
+            <TabsList className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 ">
+              <TabsTrigger value="generalParameters" className="">Generales</TabsTrigger>
               <TabsTrigger value="other">Otro</TabsTrigger>
             </TabsList>
             <TabsContent value="generalParameters">
-              <div className="grid grid-cols-1 md:grid-cols-3  gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-4">
                 <FormField
                   control={form.control}
                   name="is_electronic_biller"
@@ -900,7 +957,7 @@ export function FormSettings() {
                     </FormItem>
                   )}
                 />
-               
+
                 <FormField
                   control={form.control}
                   name="required_classification_customer"
@@ -1182,21 +1239,21 @@ export function FormSettings() {
             </TabsContent>
           </Tabs>
         </CustomCard>
+
         <div className="flex justify-end space-x-4 mt-4">
           <Button
             variant="outline"
             type="submit"
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            className="bg-white/10 border-white/20 text-white hover:bg-white/20 h-4"
           >
             Cancelar
           </Button>
-          <Button
-            className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-lg"
-            type="submit"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            Guardar
-          </Button>
+          <AnimatedGradientButton type="submit" className="cursor-pointer">
+            <div className="flex items-center justify-center gap-2">
+              <Save className="h-4 w-4" />
+              Guardar
+            </div>
+          </AnimatedGradientButton>
         </div>
       </form>
     </Form>
