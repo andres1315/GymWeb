@@ -97,6 +97,27 @@ const ClientService = {
             };
         }
     },
+
+    storeExternal: async (data: ClientFormValues): Promise<Result<Client>> => {
+        try {
+            const response: AxiosResponse<Client> = await api.post('clients/external', data);
+
+            const { status, data: dataResponse } = response;
+
+            if (status == 200) {
+                return { success: true, data: dataResponse }
+            }
+            return {
+                success: false,
+                message: 'Error create client'
+            };
+        } catch (error: any) {
+            return {
+                success: false,
+                message: error.response?.data?.error?.message || error.response?.data?.message || error.message || 'Erro get data new client'
+            };
+        }
+    },
 }
 
 export default ClientService;

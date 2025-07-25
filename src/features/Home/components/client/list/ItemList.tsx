@@ -41,18 +41,26 @@ export function ItemList({ client, currentClient, setCurrentClient, setIsOpenDia
                         </div>
                     </div>
                     <div className="flex items-center gap-4">
-                        {client.is_active ? (
-                            <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
-                                Activo
-                            </Badge>
-                        ) : (
-                            <Badge
-                                variant="secondary"
-                                className="bg-red-500/20 text-red-400"
-                            >
-                                Inactivo
-                            </Badge>
-                        )}
+                        <div className="flex flex-col items-center gap-3">
+                            {client.is_active ? (
+                                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30">
+                                    Activo
+                                </Badge>
+                            ) : (
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-red-500/20 text-red-400"
+                                >
+                                    Inactivo
+                                </Badge>
+                            )}
+
+                            {client.is_external && (
+                                <Badge className="bg-gray-500/20 text-gray-300 border-gray-500/30">
+                                    Externo
+                                </Badge>
+                            )}
+                        </div>
 
                         <Popover>
                             <PopoverTrigger asChild>

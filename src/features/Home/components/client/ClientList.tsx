@@ -91,7 +91,7 @@ export function ClientList({ clients, currentClient, setCurrentClient, isLoading
             <Button
                 size="sm"
                 variant="ghost"
-                className="absolute -right-3 top-6 z-10 h-6 w-6 p-0 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center"
+                className={"absolute -right-3 z-10 h-8 w-8 p-0 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full flex items-center justify-center " + (isCollapsed ? "top-16" : "top-6")}
                 onClick={toggleSidebar}
                 title={isCollapsed ? "Expandir sidebar" : "Contraer sidebar"}
             >
