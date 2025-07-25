@@ -1,3 +1,4 @@
+import { authService } from "@/services/auth/AuthService";
 import { BasicData } from "@/features/Home/components/client/form/BasicData";
 import { Button } from "@/components/ui/button";
 import { clientSchema, type ClientFormValues } from "@/features/Home/components/client/ClientForm";
@@ -7,15 +8,17 @@ import { format } from "date-fns";
 import { Loader } from "lucide-react";
 import { OtherData } from "@/features/Home/components/client/form/OtherData";
 import { toast } from "sonner";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useUserStore } from "@/store/useUserStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ClientService from "@/services/client/ClientService";
 
 
 function ClientForm() {
     const navigate = useNavigate()
+    const { setUser } = useUserStore();
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     const form = useForm<ClientFormValues>({
@@ -27,6 +30,18 @@ function ClientForm() {
             is_external: true
         }
     });
+
+    useEffect(() => {
+        validateAutentication();
+    }, [])
+
+    const validateAutentication = async () => {
+        const response = await authService.isAuthenticated();
+        if (response) {
+            setUser({ ...response, isLogin: true })
+            navigate('/home/dashboard', { replace: true })
+        }
+    }
 
     const onSubmit = async (values: ClientFormValues) => {
         setIsSaving(true);
