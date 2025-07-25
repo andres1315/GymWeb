@@ -17,6 +17,8 @@ const apiConfig: CreateAxiosDefaults = {
     },
 };
 
+const routesExternal = ["/client-external"]
+
 const api: AxiosInstance = axios.create(apiConfig);
 
 api.interceptors.request.use(function (config) {
@@ -61,7 +63,7 @@ const handleUnauthorized = (): void => {
     localStorage.removeItem(import.meta.env.VITE_APP_TOKEN_KEY || 'authToken');
 
     const currentPath = window.location.pathname;
-    if (currentPath !== '/login') {
+    if (currentPath !== '/login' && !routesExternal.includes(currentPath)) {
         window.location.href = '/login';
     }
 };

@@ -20,16 +20,19 @@ import type { DocumentType, PersonType } from "@/utils/interfaces/common";
 interface BasicDataProps {
     control: Control<ClientFormValues>;
     actionModule: ActionModule;
+    isExternal?: boolean;
 }
 
-export function BasicData({ control, actionModule }: BasicDataProps) {
+export function BasicData({ control, actionModule, isExternal = false }: BasicDataProps) {
 
     const [documentsTypes, setDocumentsTypes] = useState<DocumentType[]>([]);
     const [personsTypes, setPersonsTypes] = useState<PersonType[]>([]);
 
     useEffect(() => {
         getDocuments()
-        getPersonsTypes()
+        if (!isExternal) {
+            getPersonsTypes()
+        }
     }, [])
 
     const getDocuments = async () => {
@@ -56,67 +59,71 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
 
                     </div>
                     <div>
-                        <FormField
-                            control={control}
-                            name="is_active"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <div className="flex items-center justify-between mt-2 rounded-xl">
-                                        <div className="mr-3">
-                                            <Label className="dark:text-white font-medium">
-                                                Estado
-                                            </Label>
+                        {!isExternal && (
+                            <FormField
+                                control={control}
+                                name="is_active"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex items-center justify-between mt-2 rounded-xl">
+                                            <div className="mr-3">
+                                                <Label className="dark:text-white font-medium">
+                                                    Estado
+                                                </Label>
+                                            </div>
+                                            <FormControl>
+                                                <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
+                                            </FormControl>
                                         </div>
-                                        <FormControl>
-                                            <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
-                                        </FormControl>
-                                    </div>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        )}
                     </div>
                 </CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
-                    <FormField
-                        control={control}
-                        disabled={actionModule == 'view'}
-                        name="enrollment_date"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <Label>Fecha de Afiliación:</Label>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            className={`w-full justify-start text-left font-normal`}
-                                            disabled={actionModule === 'view'}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {field.value}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                            mode="single"
-                                            selected={field.value ? parseISO(field.value) : undefined}
-                                            onSelect={(date) => {
-                                                if (date) {
-                                                    field.onChange(format(date, "yyyy-MM-dd"));
-                                                } else {
-                                                    field.onChange(null);
-                                                }
-                                            }}
-                                            disabled={actionModule === 'view'}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {!isExternal && (
+                        <FormField
+                            control={control}
+                            disabled={actionModule == 'view'}
+                            name="enrollment_date"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <Label>Fecha de Afiliación:</Label>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className={`w-full justify-start text-left font-normal`}
+                                                disabled={actionModule === 'view'}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {field.value}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value ? parseISO(field.value) : undefined}
+                                                onSelect={(date) => {
+                                                    if (date) {
+                                                        field.onChange(format(date, "yyyy-MM-dd"));
+                                                    } else {
+                                                        field.onChange(null);
+                                                    }
+                                                }}
+                                                disabled={actionModule === 'view'}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
 
                     <FormField
                         control={control}
@@ -189,54 +196,58 @@ export function BasicData({ control, actionModule }: BasicDataProps) {
                         )}
                     />
 
-                    <FormField
-                        control={control}
-                        name="person_type_id"
-                        render={({ field }) => (
-                            <FormItem>
-                                <Label>Tipo de Persona:</Label>
-                                {!personsTypes.length ? (
-                                    <FormControl>
-                                        <Input disabled={true} placeholder="Cargando..." />
-                                    </FormControl>
-                                ) : (
-                                    <FormControl>
-                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
-                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {personsTypes.map(item => (
-                                                    <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
-                                )}
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {!isExternal && (
+                        <FormField
+                            control={control}
+                            name="person_type_id"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Label>Tipo de Persona:</Label>
+                                    {!personsTypes.length ? (
+                                        <FormControl>
+                                            <Input disabled={true} placeholder="Cargando..." />
+                                        </FormControl>
+                                    ) : (
+                                        <FormControl>
+                                            <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                                <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                    {field.value ? <SelectValue /> : "Seleccione una opción..."}
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {personsTypes.map(item => (
+                                                        <SelectItem key={item.id} value={item.id + ''}>{item.name}</SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                    )}
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
 
-                    <FormField
-                        control={control}
-                        name="is_leader"
-                        render={({ field }) => (
-                            <FormItem>
-                                <div className="flex items-center justify-between mt-2 rounded-xl">
-                                    <div>
-                                        <Label className="dark:text-white font-medium">
-                                            Lider de Grupo
-                                        </Label>
+                    {!isExternal && (
+                        <FormField
+                            control={control}
+                            name="is_leader"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <div className="flex items-center justify-between mt-2 rounded-xl">
+                                        <div>
+                                            <Label className="dark:text-white font-medium">
+                                                Lider de Grupo
+                                            </Label>
+                                        </div>
+                                        <FormControl>
+                                            <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
+                                        </FormControl>
                                     </div>
-                                    <FormControl>
-                                        <Switch checked={field.value} disabled={actionModule === 'view'} onCheckedChange={field.onChange} />
-                                    </FormControl>
-                                </div>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
                 </div>
             </CardContent>
         </Card>

@@ -42,6 +42,7 @@ export const clientSchema = z.object({
     how_did_you_hear_id: z.number().int().optional(),
     expiration_date: z.string().optional(),
     observations: z.string().max(250).optional(),
+    is_external: z.boolean().optional(),
 });
 
 export type ClientFormValues = z.infer<typeof clientSchema>;
@@ -62,7 +63,8 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
         defaultValues: {
             enrollment_date: format(new Date(), 'yyyy-MM-dd'),
             is_leader: false,
-            is_active: true
+            is_active: true,
+            is_external: false
         }
     });
 
@@ -124,6 +126,7 @@ export function ClientForm({ actionModule, setActionModule, getClients, currentC
                 how_did_you_hear_id: undefined,
                 expiration_date: "",
                 observations: "",
+                is_external: false
             });
         }
     }, [currentClient, form]);

@@ -38,4 +38,5 @@ export interface Client {
     how_did_you_hear?: HowDidYouHear | null;
     state?: State | null;
     city?: City | null;
+    is_external: number;
 }

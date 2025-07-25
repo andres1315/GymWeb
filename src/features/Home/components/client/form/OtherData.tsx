@@ -19,16 +19,19 @@ import type { HowDidYouHear, TaxResponsability } from "@/utils/interfaces/common
 interface BasicDataProps {
     control: Control<ClientFormValues>;
     actionModule: ActionModule;
+    isExternal?: boolean;
 }
 
-export function OtherData({ control, actionModule }: BasicDataProps) {
+export function OtherData({ control, actionModule, isExternal = false }: BasicDataProps) {
 
     const [howDidYouHear, setHowDidYouHear] = useState<HowDidYouHear[]>([]);
     const [taxResponsability, setTaxResponsability] = useState<TaxResponsability[]>([]);
 
     useEffect(() => {
         getHowDidYpuHear()
-        getTaxResponsability();
+        if (!isExternal) {
+            getTaxResponsability();
+        }
     }, [])
 
     const getHowDidYpuHear = async () => {
@@ -69,19 +72,21 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                         )}
                     />
 
-                    <FormField
-                        control={control}
-                        name="profession"
-                        render={({ field }) => (
-                            <FormItem>
-                                <Label>Profesión:</Label>
-                                <FormControl>
-                                    <Input disabled={actionModule === 'view'} placeholder="Ocupación laboral" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {!isExternal && (
+                        <FormField
+                            control={control}
+                            name="profession"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Label>Profesión:</Label>
+                                    <FormControl>
+                                        <Input disabled={actionModule === 'view'} placeholder="Ocupación laboral" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
 
                     <FormField
                         control={control}
@@ -112,86 +117,90 @@ export function OtherData({ control, actionModule }: BasicDataProps) {
                         )}
                     />
 
-                    <FormField
-                        control={control}
-                        name="expiration_date"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <Label>Fecha de Vencimiento:</Label>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant="outline"
-                                            className={`w-full justify-start text-left font-normal`}
-                                            disabled={actionModule === 'view'}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {field.value}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                            mode="single"
-                                            captionLayout="dropdown"
-                                            selected={field.value ? parseISO(field.value) : undefined}
-                                            onSelect={(date) => {
-                                                if (date) {
-                                                    field.onChange(format(date, "yyyy-MM-dd"));
-                                                } else {
-                                                    field.onChange(null);
-                                                }
-                                            }}
-                                            disabled={actionModule === 'view'}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={control}
-                        name="tax_responsability_id"
-                        render={({ field }) => (
-                            <FormItem>
-                                <Label>Responsabilidad Fiscal:</Label>
-                                {!taxResponsability.length ? (
-                                    <FormControl>
-                                        <Input disabled={true} placeholder="Cargando..." />
-                                    </FormControl>
-                                ) : (
-                                    <FormControl>
-                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
-                                            <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
-                                                {field.value ? <SelectValue /> : "Seleccione una opción..."}
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {taxResponsability.map(item => (
-                                                    <SelectItem key={item.id} value={item.id + ''}>{item.code} - {item.name}</SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </FormControl>
+                    {!isExternal && (
+                        <>
+                            <FormField
+                                control={control}
+                                name="expiration_date"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <Label>Fecha de Vencimiento:</Label>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    className={`w-full justify-start text-left font-normal`}
+                                                    disabled={actionModule === 'view'}
+                                                >
+                                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                                    {field.value}
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0">
+                                                <Calendar
+                                                    mode="single"
+                                                    captionLayout="dropdown"
+                                                    selected={field.value ? parseISO(field.value) : undefined}
+                                                    onSelect={(date) => {
+                                                        if (date) {
+                                                            field.onChange(format(date, "yyyy-MM-dd"));
+                                                        } else {
+                                                            field.onChange(null);
+                                                        }
+                                                    }}
+                                                    disabled={actionModule === 'view'}
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
                                 )}
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            />
 
-                    <FormField
-                        control={control}
-                        name="observations"
-                        render={({ field }) => (
-                            <FormItem>
-                                <Label>Observaciones:</Label>
-                                <FormControl>
-                                    <Input disabled={actionModule === 'view'} placeholder="Observacion del cliente" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                            <FormField
+                                control={control}
+                                name="tax_responsability_id"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Responsabilidad Fiscal:</Label>
+                                        {!taxResponsability.length ? (
+                                            <FormControl>
+                                                <Input disabled={true} placeholder="Cargando..." />
+                                            </FormControl>
+                                        ) : (
+                                            <FormControl>
+                                                <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                                    <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
+                                                        {field.value ? <SelectValue /> : "Seleccione una opción..."}
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {taxResponsability.map(item => (
+                                                            <SelectItem key={item.id} value={item.id + ''}>{item.code} - {item.name}</SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                        )}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={control}
+                                name="observations"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Observaciones:</Label>
+                                        <FormControl>
+                                            <Input disabled={actionModule === 'view'} placeholder="Observacion del cliente" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </>
+                    )}
                 </div>
             </CardContent>
         </Card>

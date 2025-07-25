@@ -10,9 +10,10 @@ import type { Control } from "react-hook-form";
 interface BasicDataProps {
     control: Control<ClientFormValues>;
     actionModule: ActionModule;
+    isExternal?: boolean;
 }
 
-export function ContactInformation({ control, actionModule }: BasicDataProps) {
+export function ContactInformation({ control, actionModule, isExternal = false }: BasicDataProps) {
 
     return (
         <Card className="bg-white/5 backdrop-blur-xl border-white/10 shadow-xl">
@@ -51,47 +52,51 @@ export function ContactInformation({ control, actionModule }: BasicDataProps) {
                     )}
                 />
 
-                <FormField
-                    control={control}
-                    name="address"
-                    render={({ field }) => (
-                        <FormItem>
-                            <Label>Dirección:</Label>
-                            <FormControl>
-                                <Input disabled={actionModule === 'view'} placeholder="Ej: Cl 45 # 56" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                {!isExternal && (
+                    <>
+                        <FormField
+                            control={control}
+                            name="address"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Label>Dirección:</Label>
+                                    <FormControl>
+                                        <Input disabled={actionModule === 'view'} placeholder="Ej: Cl 45 # 56" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                <FormField
-                    control={control}
-                    name="phone_emergency"
-                    render={({ field }) => (
-                        <FormItem>
-                            <Label>Celular de Emergencia:</Label>
-                            <FormControl>
-                                <Input disabled={actionModule === 'view'} placeholder="Ingrese telefono de Emergencia" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                        <FormField
+                            control={control}
+                            name="phone_emergency"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Label>Celular de Emergencia:</Label>
+                                    <FormControl>
+                                        <Input disabled={actionModule === 'view'} placeholder="Ingrese telefono de Emergencia" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
-                <FormField
-                    control={control}
-                    name="contact_emergency"
-                    render={({ field }) => (
-                        <FormItem>
-                            <Label>Nombre de Emergencia:</Label>
-                            <FormControl>
-                                <Input disabled={actionModule === 'view'} placeholder="Ingrese nombre de Emergencia" {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                        <FormField
+                            control={control}
+                            name="contact_emergency"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Label>Nombre de Emergencia:</Label>
+                                    <FormControl>
+                                        <Input disabled={actionModule === 'view'} placeholder="Ingrese nombre de Emergencia" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </>
+                )}
             </CardContent>
         </Card>
     );
