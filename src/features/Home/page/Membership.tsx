@@ -92,7 +92,7 @@ export const Membership = () => {
 
   
   return (
-    <div className="grid grid-cols-12 w-full mx-2 md:mx-0">
+    <div className="grid grid-cols-12 w-full mx-2">
       <ListMemberShip
         filterActive={filterActive}
         setFilterActive={setFilterActive}
@@ -102,7 +102,7 @@ export const Membership = () => {
         setIsCreate={setIsCreate}
       />
 
-      <div className="flex-1 overflow-auto col-span-12 md:col-span-9 mt-6 md:mt-0">
+      <div className="flex-1 overflow-auto col-span-12 lg:col-span-9 mt-6 lg:mt-0 lg:mx-4">
         <div className="md:max-w-6xl mx-auto space-y-4">
         
           {selectedPlan && <TopCard selectedPlan={selectedPlan} />}

@@ -35,16 +35,21 @@ import { Badge } from "@/components/ui/badge";
 import type { MembershipSaved } from "../../models/membership/MembershipSaved";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  AnimatedGradientButton,
+  ButtonSecondary,
+  HoverBorderGradient,
+} from "@/components/ui/customTheme";
 
 interface Props {
   isCreate: boolean;
-  selectedPlan: MembershipSaved| null
-  setIsCreate: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedPlan:React.Dispatch<React.SetStateAction<MembershipSaved|null>>
+  selectedPlan: MembershipSaved | null;
+  setIsCreate: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedPlan: React.Dispatch<React.SetStateAction<MembershipSaved | null>>;
 }
-const defaultValues= {
-  name:"",
-  description:"",
+const defaultValues = {
+  name: "",
+  description: "",
   generate_payment: false,
   generate_bill: false,
   generate_code_customer: false,
@@ -57,20 +62,29 @@ const defaultValues= {
   required_gift_voucher: false,
   admission_all_sites: false,
   controls_user_access: false,
-  guest_days: [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday"
-  ] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"  | "holiday")[],
+  guest_days: ["monday", "tuesday", "wednesday", "thursday", "friday"] as (
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday"
+    | "holiday"
+  )[],
   start_time_restriction: undefined,
   end_time_restriction: undefined,
-  restriction_days: [
-    "sunday",
-    "holiday"
-  ] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"  | "holiday")[],
-  age_restriction_type:undefined,
+  restriction_days: ["sunday", "holiday"] as (
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday"
+    | "holiday"
+  )[],
+  age_restriction_type: undefined,
   age_restriction_value: undefined,
 
   birthday_discount: false,
@@ -91,19 +105,24 @@ const defaultValues= {
   percentage_discount: 0,
   max_entry_per_day: 1,
   max_day_per_week: 0,
-  min_members_group_plan:0,
-  max_members_group_plan:0,
-}
-export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelectedPlan }: Props) {
-  const queryClient = useQueryClient()
+  min_members_group_plan: 0,
+  max_members_group_plan: 0,
+};
+export function SettingMemberShip({
+  isCreate,
+  selectedPlan,
+  setIsCreate,
+  setSelectedPlan,
+}: Props) {
+  const queryClient = useQueryClient();
   const { mutateSaveMembership } = useMembershipQuery();
 
   const form = useForm<FormMembership>({
     resolver: zodResolver(MembershipConfigSchema),
-    defaultValues
+    defaultValues,
   });
 
-  const resetForm = form.reset
+  const resetForm = form.reset;
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
     console.log({ data });
@@ -114,8 +133,8 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
     console.log({ errors });
   }
 
-  useEffect(()=>{
-    if(selectedPlan){
+  useEffect(() => {
+    if (selectedPlan) {
       const valueFormPlanSelected = {
         /* Main config */
         name: selectedPlan.name,
@@ -124,10 +143,14 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
         generate_bill: Boolean(selectedPlan.generate_bill),
         controlled_plan: Boolean(selectedPlan.controlled_plan),
         can_be_invited: Boolean(selectedPlan.can_be_invited),
-        has_assessment_physical_therapy: Boolean(selectedPlan.has_assessment_physical_therapy),
+        has_assessment_physical_therapy: Boolean(
+          selectedPlan.has_assessment_physical_therapy
+        ),
         admission_all_sites: Boolean(selectedPlan.admission_all_sites),
         controls_user_access: Boolean(selectedPlan.controls_user_access),
-        generate_movement_exp_date: Boolean(selectedPlan.generate_movement_exp_date),
+        generate_movement_exp_date: Boolean(
+          selectedPlan.generate_movement_exp_date
+        ),
         generate_code_customer: Boolean(selectedPlan.generate_code_customer),
         required_list_members: Boolean(selectedPlan.required_list_members),
         required_footprint: Boolean(selectedPlan.required_footprint),
@@ -139,72 +162,111 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
         max_day_per_week: selectedPlan.max_day_per_week,
         min_members_group_plan: selectedPlan?.min_members_group_plan || 0,
         max_members_group_plan: selectedPlan?.max_members_group_plan || 0,
-        guest_days: [] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[],
-        start_time_restriction:selectedPlan.start_time_restriction || undefined,
-        end_time_restriction:selectedPlan.end_time_restriction ||  undefined,
-        restriction_days: [] as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[],
-        age_restriction_type:selectedPlan.age_restriction_type ||  undefined,
-        age_restriction_value:selectedPlan.age_restriction_value ||  undefined,
+        guest_days: [] as (
+          | "monday"
+          | "tuesday"
+          | "wednesday"
+          | "thursday"
+          | "friday"
+          | "saturday"
+          | "sunday"
+          | "holiday"
+        )[],
+        start_time_restriction:
+          selectedPlan.start_time_restriction || undefined,
+        end_time_restriction: selectedPlan.end_time_restriction || undefined,
+        restriction_days: [] as (
+          | "monday"
+          | "tuesday"
+          | "wednesday"
+          | "thursday"
+          | "friday"
+          | "saturday"
+          | "sunday"
+          | "holiday"
+        )[],
+        age_restriction_type: selectedPlan.age_restriction_type || undefined,
+        age_restriction_value: selectedPlan.age_restriction_value || undefined,
 
         /* Other Config */
-        birthday_discount:Boolean(selectedPlan.birthday_discount),
-        discount_early_payment:Boolean(selectedPlan.discount_early_payment),
-        increase_arrears:Boolean(selectedPlan.increase_arrears),
-        start_first_day_month:Boolean(selectedPlan.start_first_day_month),
-        issues_card:Boolean(selectedPlan.issues_card),
-        generate_cxc:Boolean(selectedPlan.generate_cxc),
-        birthday_choose_gift_discount:Boolean(selectedPlan.birthday_choose_gift_discount),
-        discount_early_payment_first:Boolean(selectedPlan.discount_early_payment_first),
-        generate_payment_plan:Boolean(selectedPlan.generate_payment_plan),
-        contains_class_package:Boolean(selectedPlan.contains_class_package),
-        capture_gift_voucher:Boolean(selectedPlan.capture_gift_voucher),
+        birthday_discount: Boolean(selectedPlan.birthday_discount),
+        discount_early_payment: Boolean(selectedPlan.discount_early_payment),
+        increase_arrears: Boolean(selectedPlan.increase_arrears),
+        start_first_day_month: Boolean(selectedPlan.start_first_day_month),
+        issues_card: Boolean(selectedPlan.issues_card),
+        generate_cxc: Boolean(selectedPlan.generate_cxc),
+        birthday_choose_gift_discount: Boolean(
+          selectedPlan.birthday_choose_gift_discount
+        ),
+        discount_early_payment_first: Boolean(
+          selectedPlan.discount_early_payment_first
+        ),
+        generate_payment_plan: Boolean(selectedPlan.generate_payment_plan),
+        contains_class_package: Boolean(selectedPlan.contains_class_package),
+        capture_gift_voucher: Boolean(selectedPlan.capture_gift_voucher),
 
         /* Payment config */
-        type_payment:selectedPlan.type_payment,
-        price_plan:selectedPlan.price_plan,
-        percentage_discount:selectedPlan.percentage_discount,
-        cost_center:selectedPlan.cost_center,
-
+        type_payment: selectedPlan.type_payment,
+        price_plan: selectedPlan.price_plan,
+        percentage_discount: selectedPlan.percentage_discount,
+        cost_center: selectedPlan.cost_center,
       };
-      const guest_days=[]as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[]
-      if(selectedPlan.guest_monday) guest_days.push('monday')
-      if(selectedPlan.guest_tuesday) guest_days.push('tuesday')
-      if(selectedPlan.guest_wednesday) guest_days.push('wednesday')
-      if(selectedPlan.guest_thursday) guest_days.push('thursday')
-      if(selectedPlan.guest_friday) guest_days.push('friday')
-      if(selectedPlan.guest_saturday) guest_days.push('saturday')
-      if(selectedPlan.guest_sunday) guest_days.push('sunday')
-      if(selectedPlan.guest_holiday) guest_days.push('holiday')
-      valueFormPlanSelected.guest_days=guest_days
+      const guest_days = [] as (
+        | "monday"
+        | "tuesday"
+        | "wednesday"
+        | "thursday"
+        | "friday"
+        | "saturday"
+        | "sunday"
+        | "holiday"
+      )[];
+      if (selectedPlan.guest_monday) guest_days.push("monday");
+      if (selectedPlan.guest_tuesday) guest_days.push("tuesday");
+      if (selectedPlan.guest_wednesday) guest_days.push("wednesday");
+      if (selectedPlan.guest_thursday) guest_days.push("thursday");
+      if (selectedPlan.guest_friday) guest_days.push("friday");
+      if (selectedPlan.guest_saturday) guest_days.push("saturday");
+      if (selectedPlan.guest_sunday) guest_days.push("sunday");
+      if (selectedPlan.guest_holiday) guest_days.push("holiday");
+      valueFormPlanSelected.guest_days = guest_days;
 
-      const restriction_days=[]as ("monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday" | "holiday")[]
-      if(selectedPlan.restrictionday_monday) restriction_days.push('monday')
-      if(selectedPlan.restrictionday_tuesday) restriction_days.push('tuesday')
-      if(selectedPlan.restrictionday_wednesday) restriction_days.push('wednesday')
-      if(selectedPlan.restrictionday_thursday) restriction_days.push('thursday')
-      if(selectedPlan.restrictionday_friday) restriction_days.push('friday')
-      if(selectedPlan.restrictionday_saturday) restriction_days.push('saturday')
-      if(selectedPlan.restrictionday_sunday) restriction_days.push('sunday')
-      if(selectedPlan.restrictionday_holiday) restriction_days.push('holiday')
-      valueFormPlanSelected.restriction_days=restriction_days
-      resetForm(valueFormPlanSelected)
-    }else{
-      console.log('entry here')
-      resetForm(
-        defaultValues
-      )
+      const restriction_days = [] as (
+        | "monday"
+        | "tuesday"
+        | "wednesday"
+        | "thursday"
+        | "friday"
+        | "saturday"
+        | "sunday"
+        | "holiday"
+      )[];
+      if (selectedPlan.restrictionday_monday) restriction_days.push("monday");
+      if (selectedPlan.restrictionday_tuesday) restriction_days.push("tuesday");
+      if (selectedPlan.restrictionday_wednesday)
+        restriction_days.push("wednesday");
+      if (selectedPlan.restrictionday_thursday)
+        restriction_days.push("thursday");
+      if (selectedPlan.restrictionday_friday) restriction_days.push("friday");
+      if (selectedPlan.restrictionday_saturday)
+        restriction_days.push("saturday");
+      if (selectedPlan.restrictionday_sunday) restriction_days.push("sunday");
+      if (selectedPlan.restrictionday_holiday) restriction_days.push("holiday");
+      valueFormPlanSelected.restriction_days = restriction_days;
+      resetForm(valueFormPlanSelected);
+    } else {
+      console.log("entry here");
+      resetForm(defaultValues);
     }
-    
-  },[selectedPlan,resetForm])
+  }, [selectedPlan, resetForm]);
 
   useEffect(() => {
     if (mutateSaveMembership.isSuccess) {
-      
       /* successToast("Historia Clinica Almacenada"); */
       form.reset(defaultValues);
-      setIsCreate(false)
-      setSelectedPlan(null)
-      queryClient.invalidateQueries({ queryKey: ['GetAllMemberships'] })
+      setIsCreate(false);
+      setSelectedPlan(null);
+      queryClient.invalidateQueries({ queryKey: ["GetAllMemberships"] });
     }
   }, [mutateSaveMembership.isSuccess]);
 
@@ -797,7 +859,6 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
                         </FormLabel>
                         <Input
                           type="number"
-                          
                           className="bg-white/10 border-white/20 text-white mt-1"
                           {...field}
                         />
@@ -1041,9 +1102,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
                       defaultValue={
                         field.value ? String(field.value) : undefined
                       }
-                      value={
-                        field.value ? String(field.value) : undefined
-                      }
+                      value={field.value ? String(field.value) : undefined}
                     >
                       <FormControl className="w-full">
                         <SelectTrigger>
@@ -1163,9 +1222,7 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
                         defaultValue={
                           field.value ? String(field.value) : undefined
                         }
-                        value={
-                          field.value ? String(field.value) : undefined
-                        }
+                        value={field.value ? String(field.value) : undefined}
                       >
                         <FormControl className="w-full">
                           <SelectTrigger>
@@ -1189,20 +1246,24 @@ export function SettingMemberShip({ isCreate,selectedPlan,setIsCreate,setSelecte
         </CustomCard>
 
         <div className="flex justify-end space-x-4 mt-4">
-          <Button
-            variant="outline"
-            type="submit"
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-          >
+          <ButtonSecondary>
             Cancelar
-          </Button>
-          <Button
-            className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 shadow-lg"
+          </ButtonSecondary>
+          <HoverBorderGradient className="w-full rounded-md">
+            <AnimatedGradientButton type="submit" className="w-full">
+              <div className="flex items-center justify-center gap-2">
+                <Save className="mr-2 h-4 w-4" />
+                Guardar
+              </div>
+            </AnimatedGradientButton>
+          </HoverBorderGradient>
+          {/* <Button
+            className="bg-gradient-to-r from-primary/60 to-primary/70 hover:from-primary/80 hover:to-primar-90 shadow-lg"
             type="submit"
           >
-            <Save className="mr-2 h-4 w-4" />
+            
             Guardar
-          </Button>
+          </Button> */}
         </div>
       </form>
     </Form>

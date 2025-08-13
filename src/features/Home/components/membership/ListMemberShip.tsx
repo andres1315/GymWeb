@@ -41,13 +41,13 @@ export function ListMemberShip({
     setSelectedPlan(null)
   }
   return (
-    <div className="col-span-12 md:col-span-3 md:p-6 backdrop-blur-xl bg-white/5 border-r border-white/10 flex flex-col h-full overflow-auto " >
-      <div className="mb-6 w-full">
-        <div className="flex flex-col xl:flex-row items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-white">Planes</h2>
+    <div className="col-span-12 lg:col-span-3 p-3 md:p-6 backdrop-blur-xl bg-white/5 border-b lg:border-r border-white/10 flex flex-col h-full overflow-auto " >
+      <div className=" lg:mb-6 w-full">
+        <div className="flex flex-row  items-center justify-between mb-4">
+          <h2 className="text-lg font-bold text-white">Planes</h2>
           <div className="flex space-x-2">
             <Select value={filterActive} onValueChange={setFilterActive}>
-              <SelectTrigger className="w-auto lg:w-32 bg-white/10 border-white/20 text-white">
+              <SelectTrigger className="w-auto  bg-white/10 border-white/20 text-white">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -71,13 +71,13 @@ export function ListMemberShip({
       </div>
 
       {/* Plans List */}
-      <div className="space-y-1 h-full overflow-y-auto">
+      <div className="space-y-1 h-full overflow-auto flex flex-row lg:flex-col">
         {filteredPlans.map((plan, index) => {
           const IconComponent = Star;
           return (
             <Card
               key={plan.id}
-              className={`cursor-pointer transition-all duration-500 scale-95 hover:scale-100 backdrop-blur-sm border-white/10 ${
+              className={`cursor-pointer transition-all min-w-48 py-2 duration-500 scale-95 hover:scale-100 backdrop-blur-sm border-white/10 ${
                 selectedPlan?.id === plan.id
                   ? "bg-gradient-to-r from-emerald-500/30 to-teal-600/30 border-emerald-500/50 shadow-2xl shadow-emerald-500/25"
                   : "bg-white/5 hover:bg-white/10"
@@ -86,7 +86,7 @@ export function ListMemberShip({
               onClick={()=>handleOnSelectPlan(plan)}
             >
               <CardContent className="p-2">
-                <div className="flex items-center flex-col lg:flex-row justify-between ">
+                <div className="flex lg:items-center flex-col lg:flex-row justify-between ">
                   <div className="flex items-center space-x-3">
                     <div
                       className={`p-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 shadow-lg`}
@@ -103,13 +103,13 @@ export function ListMemberShip({
                     </div>
                   </div>
                   {plan.is_active ? (
-                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 mt-2 lg:mt-0">
+                    <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 mt-2 lg:mt-0 w-2/4 lg:w-auto self-center lg:self-auto">
                       Activo
                     </Badge>
                   ) : (
                     <Badge
                       variant="secondary"
-                      className="bg-gray-500/20 text-gray-400"
+                      className="bg-gray-500/20 text-gray-400 lg:mt-0 w-2/4 lg:w-auto self-center lg:self-auto"
                     >
                       Inactivo
                     </Badge>

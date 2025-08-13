@@ -32,6 +32,8 @@ import { useEffect, type JSX } from "react";
 import {
   AnimatedGradientButton,
   BackgroundGradient,
+  ButtonSecondary,
+  HoverBorderGradient,
 } from "@/components/ui/customTheme";
 
 const defaultValues = {
@@ -400,7 +402,7 @@ export function FormSettings() {
 
             {/* <div className=""> */}
             {/* <div className=" z-10 "> */}
-            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4">
+            <div className="bg-green-900/10  rounded-xl border border-primary/20 p-4">
               <div className="border-0 bg-transparent shadow-none h-full">
                 <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
                   <div className="w-3 h-3 bg-primary rounded-full"></div>
@@ -502,7 +504,7 @@ export function FormSettings() {
             {/* </div> */}
 
             {/* date and expiration */}
-            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4  ">
+            <div className="bg-green-900/10  to-green-800/10 rounded-xl border border-primary/20 p-4  ">
               <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
                 <Clock className="w-4 h-4 text-primary" />
                 <span>Vigencia</span>
@@ -577,7 +579,7 @@ export function FormSettings() {
             </div>
 
             {/* Tarifas y mas */}
-            <div className="bg-gradient-to-br from-green-900/30 to-zinc-800/30 rounded-xl border border-primary/20 p-4   md:col-span-2 lg:col-span-1">
+            <div className="bg-green-900/10  rounded-xl border border-primary/20 p-4   md:col-span-2 lg:col-span-1">
               <h4 className="text-white font-medium mb-4 flex items-center space-x-2">
                 <DollarSign className="w-4 h-4 text-primary" />
                 <span>Impuestos y otros</span>
@@ -1241,19 +1243,18 @@ export function FormSettings() {
         </CustomCard>
 
         <div className="flex justify-end space-x-4 mt-4">
-          <Button
-            variant="outline"
-            type="submit"
-            className="bg-white/10 border-white/20 text-white hover:bg-white/20 h-full"
-          >
+          <ButtonSecondary>
             Cancelar
-          </Button>
-          <AnimatedGradientButton type="submit" className="cursor-pointer">
-            <div className="flex items-center justify-center gap-2">
-              <Save className="h-4 w-4" />
-              Guardar
-            </div>
-          </AnimatedGradientButton>
+          </ButtonSecondary>
+          <HoverBorderGradient className="w-full rounded-md">
+
+            <AnimatedGradientButton type="submit" className="cursor-pointer">
+              <div className="flex items-center justify-center gap-2">
+                <Save className="h-4 w-4" />
+                Guardar
+              </div>
+            </AnimatedGradientButton>
+          </HoverBorderGradient>
         </div>
       </form>
     </Form>
