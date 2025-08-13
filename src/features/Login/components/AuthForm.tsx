@@ -25,11 +25,11 @@ export function AuthForm() {
   }, [])
 
   const validateAutentication = async () => {
-    const response = await authService.isAuthenticated();
+    /* const response = await authService.isAuthenticated();
     if (response) {
       setUser({ ...response, isLogin: true })
       navigate('/home/dashboard', { replace: true })
-    }
+    } */
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
