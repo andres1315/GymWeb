@@ -1,5 +1,4 @@
-/* import { Login } from "@/features/Login/pages/Login" */
-import { BrowserRouter, HashRouter, Navigate, Route } from "react-router"
+import { BrowserRouter, Navigate, Route } from "react-router"
 import { PrivateGuard } from "./PrivateGuard"
 
 import { RoutesNotFound } from "./RoutesNotFound"
@@ -15,7 +14,7 @@ const PrivateRouter = lazy(()=> import('./PrivateRouter'))
 export const AppRouter = () =>{
   return (
     <Suspense fallback={<>Cargando</>}>
-      <HashRouter>
+      <BrowserRouter>
         <RoutesNotFound>
           <Route path='/' element={<Navigate to="/home/" replace/>} />
           <Route path='/login' element={<Login/>} />
@@ -25,7 +24,7 @@ export const AppRouter = () =>{
           </Route>
           <Route path="*" element={<>Not found</>} />
         </RoutesNotFound>
-      </HashRouter>
+      </BrowserRouter>
       <Toaster />
     </Suspense>
   )
