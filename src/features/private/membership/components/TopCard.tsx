@@ -34,7 +34,7 @@ export function TopCard({ selectedPlan }: Props) {
           </div>
           <div className="text-center p-1 rounded-xl bg-white/5 backdrop-blur-sm">
             <Users className="h-4 w-4 text-blue-400 mx-auto mb-1" />
-            <p className=" font-bold text-white">{0}</p>
+            <p className=" font-bold text-white">{selectedPlan?.active_clients_count}</p>
             <p className="text-xs text-gray-400">Miembros Activos</p>
           </div>
         </div>

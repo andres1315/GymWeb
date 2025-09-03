@@ -41,6 +41,7 @@ import {
   HoverBorderGradient,
 } from "@/components/ui/customTheme";
 import { useMembershipQuery } from "../hooks/useMembershipQuery";
+import PageLoader from "@/components/page-loader";
 
 interface Props {
   isCreate: boolean;
@@ -127,7 +128,14 @@ export function SettingMemberShip({
 
   function onSubmit(data: z.infer<typeof MembershipConfigSchema>) {
     console.log({ data });
-    mutateSaveMembership.mutate(data);
+    mutateSaveMembership.mutate(data,{
+      onSuccess: () => {
+        form.reset(defaultValues);
+        setIsCreate(false);
+        setSelectedPlan(null);
+        queryClient.invalidateQueries({ queryKey: ["GetAllMemberships"] });
+      }
+    });
   }
 
   function onInvalid(errors: FieldErrors) {
@@ -256,28 +264,21 @@ export function SettingMemberShip({
       valueFormPlanSelected.restriction_days = restriction_days;
       resetForm(valueFormPlanSelected);
     } else {
-      console.log("entry here");
+      
       resetForm(defaultValues);
     }
   }, [selectedPlan, resetForm]);
 
-  useEffect(() => {
-    if (mutateSaveMembership.isSuccess) {
-      /* successToast("Historia Clinica Almacenada"); */
-      form.reset(defaultValues);
-      setIsCreate(false);
-      setSelectedPlan(null);
-      queryClient.invalidateQueries({ queryKey: ["GetAllMemberships"] });
-    }
-  }, [mutateSaveMembership.isSuccess]);
+
 
   return (
     <Form {...form}>
+      <PageLoader loading={mutateSaveMembership.isPending} />
       <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
         {/* main Config */}
         <CustomCard title="Configuración Principal" Icon={Settings}>
           {isCreate && (
-            <Badge variant="default" className="mb-4">
+            <Badge variant="default" className="mb-4 font-bold ">
               Creando nuevo Plan
             </Badge>
           )}
@@ -593,6 +594,40 @@ export function SettingMemberShip({
                 </FormItem>
               )}
             />
+            <FormField
+                  control={form.control}
+                  name="duration_days"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Duración en días</FormLabel>
+                      <Select
+                        onValueChange={(value) => field.onChange(Number(value))}
+                        defaultValue={
+                          field.value ? String(field.value) : undefined
+                        }
+                        value={field.value ? String(field.value) : undefined}
+                      >
+                        <FormControl className="w-full">
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleccione..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="8">8 Días</SelectItem>
+                          <SelectItem value="15">15 Días</SelectItem>
+                          <SelectItem value="30">30 Días</SelectItem>
+                          <SelectItem value="60">60 Días</SelectItem>
+                          <SelectItem value="90">90 Días</SelectItem>
+                          <SelectItem value="180">180 Días</SelectItem>
+                          <SelectItem value="365">365 Días</SelectItem>
+                          
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
             <div />
           </div>
         </CustomCard>

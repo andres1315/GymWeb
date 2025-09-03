@@ -18,6 +18,7 @@ export const MembershipConfigSchema = z
     admission_all_sites: z.boolean(),
     charge_registration: z.boolean(),
     controls_user_access: z.boolean(),
+    duration_days: z.number(),
 
     // Control de Acceso
     max_entry_per_day: z

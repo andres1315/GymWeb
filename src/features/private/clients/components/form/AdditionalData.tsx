@@ -219,7 +219,7 @@ export function AdditionalData({ control, actionModule, watchForm }: BasicDataPr
                                     </FormControl>
                                 ) : (
                                     <FormControl>
-                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange(Number(value))} value={field.value + ""}>
+                                        <Select disabled={actionModule === 'view'} onValueChange={(value) => field.onChange((value))} value={field.value + ""}>
                                             <SelectTrigger className="bg-white/10 border-white/20 text-white w-full truncate">
                                                 {field.value ? <SelectValue /> : "Seleccione una opción..."}
                                             </SelectTrigger>

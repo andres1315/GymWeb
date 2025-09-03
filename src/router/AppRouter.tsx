@@ -4,6 +4,7 @@ import { PrivateGuard } from "./PrivateGuard"
 import { RoutesNotFound } from "./RoutesNotFound"
 import { Suspense,lazy } from "react"
 import { Toaster } from "@/components/ui/sonner"
+import PageLoader from "@/components/page-loader"
 
 const Login = lazy(()=> import('@/features/Login/page/Login'))
 const ClientExternal = lazy(()=> import('@/features/External/Client/ClientForm'))
@@ -13,7 +14,7 @@ const PrivateRouter = lazy(()=> import('./PrivateRouter'))
 
 export const AppRouter = () =>{
   return (
-    <Suspense fallback={<>Cargando</>}>
+    <Suspense fallback={<PageLoader loading={true} />}>
       <BrowserRouter>
         <RoutesNotFound>
           <Route path='/' element={<Navigate to="/home/" replace/>} />

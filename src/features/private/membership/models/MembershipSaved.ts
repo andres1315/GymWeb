@@ -1,3 +1,5 @@
+import type { MembershipClientInfo } from "./MembershipClientInfo"
+
 export interface MembershipSaved {
   id: number
   name: string
@@ -52,9 +54,12 @@ export interface MembershipSaved {
   generate_cxc: number
   type_payment: number
   price_plan: number
+  duration_days: string;
   percentage_discount: number
   cost_center: number
   is_active: number
   created_at: string
   updated_at: string
+  membership_info:MembershipClientInfo
+  active_clients_count: number
 }

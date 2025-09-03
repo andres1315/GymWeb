@@ -1,3 +1,4 @@
+import type { MembershipSaved } from "@/features/private/membership/models/MembershipSaved";
 import type { City, Country, DocumentType, Gender, HowDidYouHear, PersonType, State, TaxResponsability } from "./common";
 
 export interface Client {
@@ -39,4 +40,6 @@ export interface Client {
     state?: State | null;
     city?: City | null;
     is_external: number;
+    memberships: MembershipSaved[];
+    membership_to_assign: string;
 }
