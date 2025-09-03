@@ -1,5 +1,5 @@
 
-import type { FormMembership } from "@/features/Home/models/membership/formMembership";
+import type { FormMembership } from "@/features/private/membership/models/formMembership";
 import api from "@/utils/api/axios";
 
 export class MembershipService {

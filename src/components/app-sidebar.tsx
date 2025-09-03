@@ -8,8 +8,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 
-import { useSidebarMenu } from "@/features/Home/hooks/useSidebarMenu"
+
 import { NavItem } from "./nav-main"
+import { useSidebarMenu } from "@/features/private/sidebar/hooks/useSidebarMenu"
 
 
 

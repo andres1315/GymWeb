@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink } from "react-router";
 import { useSidebarMenuStore } from "@/store/useSidebarMenuStore";
-import type { SidebarMenuItemType } from "@/features/Home/models/sidebar/itemsMenu";
+import type { SidebarMenuItemType } from "@/features/private/sidebar/models/itemsMenu";
 
 
 interface Props {

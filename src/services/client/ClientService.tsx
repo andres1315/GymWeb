@@ -1,9 +1,9 @@
 import api from '../../utils/api/axios';
 import type { AxiosResponse } from 'axios';
 import type { Client } from '@/utils/interfaces/client';
-import type { ClientFormValues } from '@/features/Home/components/client/ClientForm';
+import type { ClientFormValues } from '@/features/private/clients/components/ClientForm';
 import type { PaginatedResponse } from '@/utils/interfaces/common';
-import type { StatusType } from '@/features/Home/page/Client';
+import type { StatusType } from '@/features/private/clients';
 
 interface Result<T> {
     success: boolean;

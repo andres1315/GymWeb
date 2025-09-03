@@ -1,12 +1,12 @@
 import { authService } from "@/services/auth/AuthService";
-import { BasicData } from "@/features/Home/components/client/form/BasicData";
+import { BasicData } from "@/features/private/clients/components/form/BasicData";
 import { Button } from "@/components/ui/button";
-import { clientSchema, type ClientFormValues } from "@/features/Home/components/client/ClientForm";
-import { ContactInformation } from "@/features/Home/components/client/form/ContactInformation";
+import { clientSchema, type ClientFormValues } from "@/features/private/clients/components/ClientForm";
+import { ContactInformation } from "@/features/private/clients/components/form/ContactInformation";
 import { Form } from "@/components/ui/form"
 import { format } from "date-fns";
 import { Loader } from "lucide-react";
-import { OtherData } from "@/features/Home/components/client/form/OtherData";
+import { OtherData } from "@/features/private/clients/components/form/OtherData";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

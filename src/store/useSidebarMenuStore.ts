@@ -1,6 +1,6 @@
 
 
-import { mainItemsSidebarMenu } from '@/features/Home/models/sidebar/itemsMenu';
+import { mainItemsSidebarMenu } from '@/features/private/sidebar/models/itemsMenu';
 import { create } from 'zustand'
 
 type mainItemsSidebarMenuType = typeof mainItemsSidebarMenu[keyof typeof mainItemsSidebarMenu];

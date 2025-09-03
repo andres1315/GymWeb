@@ -1,6 +1,6 @@
 
 
-import type { formAppConfig } from "@/features/Home/models/settings/formSettings";
+import type { formAppConfig } from "@/features/private/settings/models/formSettings";
 import api from "@/utils/api/axios";
 
 export class SettingAppService {
